@@ -1,4 +1,4 @@
-# JSScan
+# NipeJS
 
 > Read list of JS files and look for sensitive data via regex. 
 
