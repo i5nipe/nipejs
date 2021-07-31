@@ -7,8 +7,7 @@ You don't need to specify the regex file if you put it in `~/.nipe/regex.txt`
 ## ☕ Install
 `go get github.com/i5nipe/nipejs`
 
-## ☕ regular expressions
-> Download the file `files/regex.txt`
+## ☕ Regular expressions
 You don't need to specify the regex file if you put it in `~/.nipe/regex.txt`
 
 ## ☕ Usage examples
