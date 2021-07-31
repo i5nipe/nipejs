@@ -39,7 +39,6 @@ AIza[0-9A-Za-z\\-_]{35}
 ya29\\.[0-9A-Za-z\\-_]+
 AIza[0-9A-Za-z\\-_]{35}
 key-[0-9a-zA-Z]{32}
-(?<=mailto:)[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]{10}
 sk_live_[0-9a-z]{32}
 xox[baprs]-([0-9a-zA-Z]{10,48})
 https://hooks.slack.com/services/T[a-zA-Z0-9_]{8}/B[a-zA-Z0-9_]{8}/[a-zA-Z0-9_]{24}
