@@ -1,8 +1,0 @@
-6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}$	- Google Recaptcha
-
-[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}	- Heruko
-Heruko test: 7E73BE8F-FD87-44EC-8E22-023D5FF960FF
-
-
-curl --user 'api:key-PRIVATEKEYHERE' "https://api.mailgun.net/v3/domains"
-key-[0-9a-zA-Z]{32}  - MailGun
