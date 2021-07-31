@@ -41,3 +41,4 @@ cat jsfile | nipejs -r regex.txt
 - [ProjectDiscovery/gologger](https://github.com/projectdiscovery/gologger)
 - [odomojuli/RegExAPI](https://github.com/odomojuli/RegExAPI)
 - [l4yton/RegHex](https://github.com/l4yton/RegHex)
+- [logrusorgru/aurora](https://github.com/logrusorgru/aurora)
