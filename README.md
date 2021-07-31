@@ -2,6 +2,9 @@
 
 > Read list of JS files and look for sensitive data via regex. 
 
+## ☕ Install
+`go get github.com/i5nipe/nipejs`
+
 ## ☕ Usage examples
 
 ```
