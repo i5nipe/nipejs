@@ -16,7 +16,7 @@ go get github.com/i5nipe/nipejs
 
 - This tool has some special regex, e.g. decrypt base64 strings.
 
-- Automatically test the authenticity of some API keys and notify for telegram if valid. (~~Not sure about the results yet.~~)
+- Automatically test the authenticity of some API keys and notify via telegram if valid. (~~Not sure about the results yet.~~)
   - You need to set up your Telegram token in the Environment, export the following variables:
   ```bash
   export NIPEKEY={telegram-API-Key}
