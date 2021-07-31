@@ -52,7 +52,7 @@ func init() {
 		if err != nil {
 			log.Fatal().Msg(fmt.Sprintf("%s", err))
 		}
-		*regexf = fmt.Sprintf("%s/BugBounty/regex.txt", user.HomeDir)
+		*regexf = fmt.Sprintf("%s/.nipe/regex.txt", user.HomeDir)
 	}
 }
 
@@ -97,16 +97,13 @@ func main() {
 			case `s3\.amazonaws.com[/]+|[a-zA-Z0-9_-]*\.s3\.amazonaws.com`:
 				resp.printdefault("S3 bucket")
 				resp.printresu()
-			case `[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`:
-				resp.printdefault("URL")
-				resp.printresu()
 			case `\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}\b`:
 				resp.printdefault("IPv4")
 				resp.printresu()
 			case `[a-f0-9]{32}`:
 				resp.printdefault("MD5 hash")
 				resp.printresu()
-			case `6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}$`:
+			case `6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}`:
 				resp.printdefault("Google Recaptcha")
 				resp.printrecaptcha()
 			case `key-[0-9a-zA-Z]{32}`:
