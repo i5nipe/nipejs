@@ -1,26 +1,13 @@
 # JSScan
 
-> Ler lista de arquivos JS e procura dados sensiveis via regex. 
+> Read list of JS files and look for sensitive data via regex. 
 
-### Ajustes e melhorias
-
-O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
-
-- [x] Ler lista de URLs via STDIN
-- [ ] Modificar o tempo de timeout
-- [ ] Concorrência para bater as regex
-
-## ☕ Usando JSScan
-
-Para usar JSScan, siga estas etapas:
+## ☕ Usage examples
 
 ```
-jsscan -urls jsfile
+nipejs -urls jsfile -r regex.txt
 
-jsscan -urls ~/Path/to/jsfile -s 
+nipejs -urls ~/Path/to/jsfile -s -r regex.txt
 
-cat jsfile | jsscan
+cat jsfile | nipejs -r regex.txt
 ```
-
-
-
