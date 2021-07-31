@@ -1,4 +1,4 @@
-module github.com/i5nipe/hacks/nipejs
+module github.com/i5nipe/nipejs
 
 go 1.16
 
