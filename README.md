@@ -2,7 +2,9 @@
 
 > Read list of JS files and look for sensitive data via regex. 
 <img src="./files/NipeJS.png" alt="alt text" width="350"/>
+
 ## ☕ Install
+
 ```bash
 go get github.com/i5nipe/nipejs
 ```
