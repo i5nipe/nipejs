@@ -1,0 +1,64 @@
+[1-9][ 0-9]+-[0-9a-zA-Z]{40} 	
+EAACEdEose0cBA[0-9A-Za-z]+ 	
+[a-z0-9.-]+\\.firebaseio\\.com
+[a-z0-9.-]+\\.firebaseapp\\.com
+firebase[_-]?project[_-]?develop(=| =|:| :)
+firebase[_-]?key(=| =|:| :)
+firebase[_-]?api[_-]?token(=| =|:| :)
+AIza[0-9A-Za-z-_]{35} 	
+[a-zA-Z]{3,15}:\/\/[^\/\\:@]+:[^\/\\:@]+@.{1,100}
+[A-Za-z0-9_]{255} 
+[0-9(+-[0-9A-Za-z_]{32}.apps.qooqleusercontent.com 	
+[0-9a-zA-Z_][5,31] 	
+R_[0-9a-f]{32}
+sk_live_[0-9a-z]{32}
+sqOatp-[0-9A-Za-z-_]{22}
+q0csp-[ 0-9A-Za-z-_]{43}
+$[0-9a-z]{161[0-9a,]{32}
+.mws.[0-9a-f]{8}-[0-9a-f]{4}-10-9a-f1{4}-[0-9a,]{4}-[0-9a-f]{12} 	
+55[0-9a-fA-F]{32} 	
+key-[0-9a-zA-Z]{32} 	
+[0-9a-f]{32}-us[0-9]{1,2} 	
+xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24} 	
+T[a-zA-Z0-9_]{8}/B[a-zA-Z0-9_]{8}/[a-zA-Z0-9_]{24}
+AKIA[0-9A-Z]{16} 	
+[0-9a-zA-Z/+]{40} 	
+[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12} 	
+[A-Za-z0-9_]{21}--[A-Za-z0-9_]{8} 	
+[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}
+[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12} 	
+oqleusercontent.com
+R_[0-9a-f]{32}
+sk_live_[0-9a-z]{32}
+(?i)linkedin(.{0,20})?(?-i)['\"][0-9a-z]{12}['\"]
+access_token,production$[0-9a-z]{161[0-9a,]{32}
+xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24}
+AKIA[0-9A-Z]{16}
+basic [a-zA-Z0-9]
+bearer [a-zA-Z0-9]
+amzn\.mws\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
+EAACEdEose0cBA[0-9A-Za-z]+
+[f|F][a|A][c|C][e|E][b|B][o|O][o|O][k|K].*['|\"][0-9a-f]{32}['|\"]
+(GITHUB|github)(:|=| : | = )( |"|')[0-9A-Za-z\\-]{10}
+(?i)(google|gcp|youtube|drive|yt)(.{0,20})?['\"][AIza[0-9a-z\\-_]{35}]['\"]
+[0-9]+-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com
+ya29\\.[0-9A-Za-z\\-_]+
+xox[baprs]-([0-9a-zA-Z]{10,48})
+https://hooks.slack.com/services/T[a-zA-Z0-9_]{8}/B[a-zA-Z0-9_]{8}/[a-zA-Z0-9_]{24}
+(?:r|s)k_live_[0-9a-zA-Z]{24}
+sqOatp-[0-9A-Za-z\\-_]{22}
+sq0csp-[ 0-9A-Za-z\\-_]{43}
+SK[0-9a-fA-F]{32}
+(?i)twitter(.{0,20})?['\"][0-9a-z]{18,25}
+[t|T][w|W][i|I][t|T][t|T][e|E][r|R].{0,30}['\"\\s][0-9a-zA-Z]{35,44}['\"\\s]
+(?i)twitter(.{0,20})?['\"][0-9a-z]{35,44}
+AAAA[A-Za-z0-9_-]{5,100}:[A-Za-z0-9_-]{140}
+6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}$
+ya29\.[0-9A-Za-z\-_]+
+amzn\\.mws\\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
+\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}\b
+<h1>Index of (.*?)</h1>
+(.*?)@smtp\.gmail\.com
+oauthclient_.{22}
+(ftp|ftps|http|https)://[A-Za-z0-9-_:\.~]+(@)
+[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}

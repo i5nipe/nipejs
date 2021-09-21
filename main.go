@@ -109,9 +109,9 @@ func main() {
 			case `key-[0-9a-zA-Z]{32}`:
 				resp.printdefault("Mailgun")
 				resp.printmailgun()
-			case `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`:
-				resp.printdefault("Heruko API KEY")
-				resp.printheruko()
+			case `[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}`:
+				resp.printdefault("UUID")
+				resp.printresu()
 			case `(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}`:
 				resp.printdefault("Base64")
 				resp.printb64()
