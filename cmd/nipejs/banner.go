@@ -1,4 +1,4 @@
-package main
+package nipejs
 
 import (
 	. "github.com/logrusorgru/aurora/v3"
