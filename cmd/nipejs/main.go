@@ -5,25 +5,26 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"os/user"
 	"regexp"
 	"sync"
+	"time"
 
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
+	"github.com/valyala/fasthttp"
 )
 
 var (
 	regexf  = flag.String("r", "~/.nipe/regex.txt", "Regex file")
-	usera   = flag.String("u", "Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0", "User-Agent")
+	usera   = flag.String("a", "Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0", "User-Agent")
 	silent  = flag.Bool("s", false, "Silent Mode")
-	threads = flag.Int("t", 70, "Number of threads")
-	urls    = flag.String("urls", "", "List of URLs to scan")
+	threads = flag.Int("t", 50, "Number of threads")
+	urls    = flag.String("u", "", "List of URLs to scan")
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
+	timeout = flag.Int("timeout", 10, "Timeout in seconds")
 )
 var wg sync.WaitGroup
 
@@ -57,14 +58,21 @@ func init() {
 }
 
 func Execute() {
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	c := &fasthttp.Client{
+		Name: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36",
+		TLSConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
+	}
+	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	file, _ := os.Open(*urls)
 
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
 
 	for w := 1; w < *threads; w++ {
-		go GetBody(curl, results)
+		go GetBody(curl, results, c)
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -135,32 +143,48 @@ func Execute() {
 	defer file.Close()
 }
 
-func GetBody(curl chan string, results chan Results) {
+func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 	rege, falha := getregexfile()
 	if falha {
 		fmt.Println("Unable to open regexps file")
 		return
 	}
+
+	req := fasthttp.AcquireRequest()
+	resp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseRequest(req)
+	defer fasthttp.ReleaseResponse(resp)
+
 	for url := range curl {
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			wg.Done()
-			continue
-		}
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("User-Agent", *usera)
 
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			wg.Done()
-			continue
-		}
-		html, err := io.ReadAll(resp.Body)
-		if err != nil {
-			wg.Done()
-			continue
-		}
+		req.SetRequestURI(url)
 
+		c.Do(req, resp)
+
+		html := resp.Body()
+
+		/*
+			req, err := http.NewRequest("GET", url, nil)
+			if err != nil {
+				wg.Done()
+				continue
+			}
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			req.Header.Set("User-Agent", *usera)
+
+			resp, err := http.DefaultClient.Do(req)
+			if err != nil {
+				wg.Done()
+				continue
+			}
+			html, err := io.ReadAll(resp.Body)
+			if err != nil {
+				wg.Done()
+				continue
+			}
+		*/
+
+		//var html need be a []byte
 		scanner := bufio.NewScanner(rege)
 		log.Debug().Msg(fmt.Sprintf("%v %s", Red("Url"), url))
 		for scanner.Scan() {
@@ -173,7 +197,6 @@ func GetBody(curl chan string, results chan Results) {
 				}
 			}(scanner.Text())
 		}
-		resp.Body.Close()
 		wg.Done()
 	}
 }
