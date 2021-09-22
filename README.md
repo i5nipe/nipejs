@@ -16,12 +16,14 @@ go get github.com/i5nipe/nipejs
 
 - This tool has some special regex, e.g. decrypt base64 strings.
 
+- Automatically test the authenticity of some API keys 
+
 ## ☕ Usage examples
 
 ```
-nipejs -urls jsfile -r regex.txt
+nipejs -u jsfile -r regex.txt
 
-nipejs -urls ~/Path/to/jsfile -s -r regex.txt
+nipejs -u ~/Path/to/jsfile -s -r regex.txt
 
 cat jsfile | nipejs -r regex.txt
 ```

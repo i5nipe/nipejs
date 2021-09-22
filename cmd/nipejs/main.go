@@ -21,7 +21,7 @@ var (
 	regexf  = flag.String("r", "~/.nipe/regex.txt", "Regex file")
 	usera   = flag.String("a", "Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0", "User-Agent")
 	silent  = flag.Bool("s", false, "Silent Mode")
-	threads = flag.Int("t", 50, "Number of threads")
+	threads = flag.Int("c", 50, "Set the concurrency level")
 	urls    = flag.String("u", "", "List of URLs to scan")
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
