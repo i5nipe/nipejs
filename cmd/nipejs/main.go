@@ -25,6 +25,7 @@ var (
 	urls    = flag.String("u", "", "List of URLs to scan")
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
+	version = flag.Bool("version", false, "Prints version information")
 )
 var wg sync.WaitGroup
 
@@ -40,6 +41,10 @@ func init() {
 
 	if *debug {
 		log.DefaultLogger.SetMaxLevel(levels.LevelDebug)
+	}
+	if *version {
+		fmt.Printf("NipeJS %s\n", Version)
+		os.Exit(1)
 	}
 
 	if !*silent {
