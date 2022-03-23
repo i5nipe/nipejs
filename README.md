@@ -6,7 +6,7 @@
 ## ☕ Install
 
 ```bash
-go get github.com/i5nipe/nipejs
+go install github.com/i5nipe/nipejs@latest
 ```
 
 ## ☕ Regular expressions
