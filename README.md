@@ -5,7 +5,13 @@
 
 ## ☕ Install
 
-```bash
+go 1.15, 1.16
+```
+GO111MODULE=on go get github.com/i5nipe/nipejs
+```
+
+go 1.17+
+```
 go install github.com/i5nipe/nipejs@latest
 ```
 
