@@ -1,17 +1,10 @@
 # NipeJS
 
-> Read list of JS files and look for sensitive data via regex. 
+> Read a list of JS files and look for sensitive data via regex.
 <img src="./files/NipeJS.jpeg" alt="alt text" width="550"/>
 
 ## ☕ Install
-
-go 1.15, 1.16
-```
-GO111MODULE=on go get github.com/i5nipe/nipejs
-```
-
-go 1.17+
-```
+```bash
 go install github.com/i5nipe/nipejs@latest
 ```
 
@@ -26,7 +19,7 @@ go install github.com/i5nipe/nipejs@latest
 
 ## ☕ Usage examples
 
-```
+```bash
 nipejs -u jsfile -r regex.txt
 
 nipejs -u ~/Path/to/jsfile -s -r regex.txt
