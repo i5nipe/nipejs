@@ -22,6 +22,4 @@ const Version = `v1.5.0`
 // showBanner is used to show the banner to the user
 func Banner() {
 	gologger.Print().Msgf("%s", Magenta(banner))
-	gologger.Print().Msgf("\t\t\t\t\tMade with %s by nipe\n", Red("<3"))
-
 }

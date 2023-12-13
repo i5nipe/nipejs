@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	regexf  = flag.String("r", "~/.nipe/regex.txt", "Regex file")
+	regexf  = flag.String("r", "~/.config/nipejs/regex.txt", "Regex file")
 	usera   = flag.String("a", "Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0", "User-Agent")
 	silent  = flag.Bool("s", false, "Silent Mode")
 	threads = flag.Int("c", 50, "Set the concurrency level")
@@ -53,7 +53,7 @@ func init() {
 		log.DefaultLogger.SetMaxLevel(levels.LevelSilent)
 
 	}
-	if *regexf == "~/.nipe/regex.txt" {
+	if *regexf == "~/.config/nipejs/regex.txt" {
 		user, err := user.Current()
 		if err != nil {
 			log.Fatal().Msg(fmt.Sprintf("%s", err))
