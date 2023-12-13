@@ -73,6 +73,12 @@ func Execute() {
 	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	file, _ := os.Open(*urls)
 
+	_, falha := getregexfile()
+	if falha {
+		fmt.Println("Unable to open regexps file")
+		return
+	}
+
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
 
@@ -149,11 +155,7 @@ func Execute() {
 }
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-	rege, falha := getregexfile()
-	if falha {
-		fmt.Println("Unable to open regexps file")
-		return
-	}
+  rege, _ := getregexfile()
 
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
