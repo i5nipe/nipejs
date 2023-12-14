@@ -89,9 +89,13 @@ func Execute() {
 			go GetBody(curl, results, c)
 		}
 	} else {
-		_, err := getfile(*jsfilename)
+		jsfile, err := getfile(*jsfilename)
 		if err {
-			fmt.Println("Unable to open file: %s", *jsfilename)
+			fmt.Println("Unable to open file:", *jsfilename)
+		}
+		scanner := bufio.NewScanner(jsfile)
+		for scanner.Scan() {
+			fmt.Println(scanner.Text())
 		}
 
 	}
