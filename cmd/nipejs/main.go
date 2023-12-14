@@ -26,7 +26,7 @@ var (
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
 	version = flag.Bool("version", false, "Prints version information")
-	file 		= flag.String("f", "", "JsFile to scan")
+	jsfile 		= flag.String("f", "", "JsFile to scan")
 )
 var wg sync.WaitGroup
 
@@ -74,7 +74,7 @@ func Execute() {
 	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	file, _ := os.Open(*urls)
 
-	_, falha := getregexfile()
+	_, falha := getfile()
 	if falha {
 		fmt.Println("Unable to open regexps file")
 		return
@@ -83,8 +83,13 @@ func Execute() {
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
 
-	for w := 1; w < *threads; w++ {
-		go GetBody(curl, results, c)
+
+	if *jsfile == "" {
+		for w := 1; w < *threads; w++ {
+			go GetBody(curl, results, c)
+		}
+	} else {
+
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -156,7 +161,7 @@ func Execute() {
 }
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-  rege, _ := getregexfile()
+  rege, _ := getfile()
 
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
@@ -188,7 +193,7 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 	}
 }
 
-func getregexfile() (*os.File, bool) {
+func getfile() (*os.File, bool) {
 	rege, err := os.Open(*regexf)
 	if err != nil {
 		return rege, true
