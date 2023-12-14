@@ -26,6 +26,7 @@ var (
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
 	version = flag.Bool("version", false, "Prints version information")
+	file 		= flag.String("f", "", "JsFile to scan")
 )
 var wg sync.WaitGroup
 
