@@ -170,27 +170,6 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 
 		html := resp.Body()
 
-		/*
-			req, err := http.NewRequest("GET", url, nil)
-			if err != nil {
-				wg.Done()
-				continue
-			}
-			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-			req.Header.Set("User-Agent", *usera)
-
-			resp, err := http.DefaultClient.Do(req)
-			if err != nil {
-				wg.Done()
-				continue
-			}
-			html, err := io.ReadAll(resp.Body)
-			if err != nil {
-				wg.Done()
-				continue
-			}
-		*/
-
 		//var html need be a []byte
 		scanner := bufio.NewScanner(rege)
 		log.Debug().Msg(fmt.Sprintf("%v %s", Red("Url"), url))
