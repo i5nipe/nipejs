@@ -26,7 +26,7 @@ var (
 	debug   = flag.Bool("b", false, "Debug mode (For developers)")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
 	version = flag.Bool("version", false, "Prints version information")
-	jsfile 		= flag.String("f", "", "JsFile to scan")
+	jsfilename 		= flag.String("f", "", "JsFile to scan")
 )
 var wg sync.WaitGroup
 
@@ -74,7 +74,7 @@ func Execute() {
 	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	file, _ := os.Open(*urls)
 
-	_, falha := getfile()
+	_, falha := getfile(*regexf)
 	if falha {
 		fmt.Println("Unable to open regexps file")
 		return
@@ -84,11 +84,15 @@ func Execute() {
 	curl := make(chan string, *threads)
 
 
-	if *jsfile == "" {
+	if *jsfilename == "" {
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 	} else {
+		_, err := getfile(*jsfilename)
+		if err {
+			fmt.Println("Unable to open file: %s", *jsfilename)
+		}
 
 	}
 
@@ -161,7 +165,7 @@ func Execute() {
 }
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-  rege, _ := getfile()
+  rege, _ := getfile(*regexf)
 
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
@@ -193,8 +197,8 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 	}
 }
 
-func getfile() (*os.File, bool) {
-	rege, err := os.Open(*regexf)
+func getfile(file string) (*os.File, bool) {
+	rege, err := os.Open(file)
 	if err != nil {
 		return rege, true
 	}
