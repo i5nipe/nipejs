@@ -92,11 +92,9 @@ func Execute() {
 		jsfile, err := getfile(*jsfilename)
 		if err {
 			fmt.Println("Unable to open file:", *jsfilename)
+			os.Exit(1)
 		}
-		scanner := bufio.NewScanner(jsfile)
-		for scanner.Scan() {
-			fmt.Println(scanner.Text())
-		}
+		go ReadFiles(results, jsfile)
 
 	}
 
@@ -166,6 +164,15 @@ func Execute() {
 	close(results)
 	close(curl)
 	defer file.Close()
+}
+
+func ReadFiles(results chan Results, jsfile *os.File){
+	rege, _ := getfile(*regexf)
+
+	scanner := bufio.NewScanner(rege)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
 }
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
