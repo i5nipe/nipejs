@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"sync"
 	"time"
+	"io"
 
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
@@ -89,12 +90,13 @@ func Execute() {
 			go GetBody(curl, results, c)
 		}
 	} else {
-		jsfile, err := getfile(*jsfilename)
-		if err {
+		jsfile, err := os.Open(*jsfilename)
+		if err != nil {
 			fmt.Println("Unable to open file:", *jsfilename)
 			os.Exit(1)
 		}
-		go ReadFiles(results, jsfile)
+		jsfile1, _ := io.ReadAll(jsfile)
+		go ReadFiles(results, jsfile1)
 
 	}
 
@@ -166,12 +168,19 @@ func Execute() {
 	defer file.Close()
 }
 
-func ReadFiles(results chan Results, jsfile *os.File){
+func ReadFiles(results chan Results, jsfile []byte){
 	rege, _ := getfile(*regexf)
 
 	scanner := bufio.NewScanner(rege)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		func(reges string) {
+			log.Debug().Msg(scanner.Text())
+			nurex := regexp.MustCompile(reges)
+			bateu := nurex.FindString(string(jsfile))
+			if bateu != "" {
+				results <- Results{bateu, "FileName", reges, len(string(jsfile)) / 5}
+			}
+		}(scanner.Text())
 	}
 }
 
