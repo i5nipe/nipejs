@@ -10,15 +10,32 @@ import (
 	log "github.com/projectdiscovery/gologger"
 )
 
+func createTMPfile(filename string, strings2write []string) (io.Reader){
+	file, err := os.Create(filename)
+	if err != nil {
+		log.Fatal().Msg("Unable to create file in /tmp directory")
+	}
+	defer file.Close()
+
+	for _ , str := range strings2write {
+		_, err := file.WriteString(str + "\n")
+		if err != nil {
+			log.Fatal().Msg("Unable to write in file on /tmp directory")
+		}
+	}
+	tmpfile, _ := os.Open(filename)
+	return tmpfile
+}
+
+
+
 func ReadFiles(results chan Results,files chan string){
 	rege, _ := getfile(*regexf)
-	log.Debug().Msg("Abriu")
 
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
-			fmt.Println("Unable to open file:", *jsfilename)
-			os.Exit(1)
+			log.Fatal().Msg(fmt.Sprintf("Unable to open file: %s", *jsfilename))
 		}
 		jsfile, _ := io.ReadAll(jsprefile)
 

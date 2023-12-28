@@ -92,12 +92,14 @@ func Execute() {
 		input = bufio.NewScanner(urlsFile)
 
 	} else {
-		//tmpFilename := fmt.Sprintf("/tmp/nipejs_%d")
+		tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
+
+		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
 		
 		for w := 1; w < *threads; w++ {
 			go ReadFiles(results,curl)
 		}
-		//input = bufio.NewScanner(jsfilename)
+		input = bufio.NewScanner(tmpFile)
 	}
 
 	if *urls == "" {
