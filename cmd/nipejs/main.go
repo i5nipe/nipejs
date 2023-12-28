@@ -85,10 +85,13 @@ func Execute() {
 	curl := make(chan string, *threads)
 
 
+	var input *bufio.Scanner
+
 	if *jsfilename == "" {
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
+		input = bufio.NewScanner(urlsFile)
 	} else {
 		/*
 		jsfile, err := os.Open(*jsfilename)
@@ -102,9 +105,9 @@ func Execute() {
 		for w := 1; w < *threads; w++ {
 			go ReadFiles(results,curl)
 		}
+		//input := bufio.NewScanner(files)
 	}
 
-	input := bufio.NewScanner(urlsFile)
 	if *urls == "" {
 		input = bufio.NewScanner(os.Stdin)
 	}
