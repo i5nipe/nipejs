@@ -73,7 +73,7 @@ func Execute() {
 		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
 	}
 	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	file, _ := os.Open(*urls)
+	urlsFile, _ := os.Open(*urls)
 
 	_, falha := getfile(*regexf)
 	if falha {
@@ -104,9 +104,9 @@ func Execute() {
 		}
 	}
 
-	scanner := bufio.NewScanner(file)
+	input := bufio.NewScanner(urlsFile)
 	if *urls == "" {
-		scanner = bufio.NewScanner(os.Stdin)
+		input = bufio.NewScanner(os.Stdin)
 	}
 
 	go func() {
@@ -160,8 +160,8 @@ func Execute() {
 			}
 		}
 	}()
-	for scanner.Scan() {
-		curl <- scanner.Text()
+	for input.Scan() {
+		curl <- input.Text()
 		wg.Add(1)
 	}
 
@@ -169,30 +169,32 @@ func Execute() {
 
 	close(results)
 	close(curl)
-	defer file.Close()
+	defer urlsFile.Close()
 }
 
-func ReadFiles(results chan Results,file chan string){
+func ReadFiles(results chan Results,files chan string){
 	rege, _ := getfile(*regexf)
 
+	for file := range files {
+		jsprefile, err := os.Open(file)
+		if err != nil {
+			fmt.Println("Unable to open file:", *jsfilename)
+			os.Exit(1)
+		}
+		jsfile, _ := io.ReadAll(jsprefile)
 
-	jsprefile, err := os.Open(*jsfilename)
-	if err != nil {
-		fmt.Println("Unable to open file:", *jsfilename)
-		os.Exit(1)
-	}
-	jsfile, _ := io.ReadAll(jsprefile)
-
-	scanner := bufio.NewScanner(rege)
-	for scanner.Scan() {
-		func(reges string) {
-			log.Debug().Msg(scanner.Text())
-			nurex := regexp.MustCompile(reges)
-			bateu := nurex.FindString(string(jsfile))
-			if bateu != "" {
-				results <- Results{bateu, "FileName", reges, len(string(jsfile)) / 5}
-			}
-		}(scanner.Text())
+		scanner := bufio.NewScanner(rege)
+		for scanner.Scan() {
+			func(reges string) {
+				log.Debug().Msg(scanner.Text())
+				nurex := regexp.MustCompile(reges)
+				bateu := nurex.FindString(string(jsfile))
+				if bateu != "" {
+					results <- Results{bateu, "FileName", reges, len(string(jsfile)) / 5}
+				}
+			}(scanner.Text())
+		}
+		wg.Done()
 	}
 	
 }
