@@ -7,11 +7,10 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"regexp"
 	"sync"
 	"time"
 
-	. "github.com/logrusorgru/aurora/v3"
+	//. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
 	"github.com/valyala/fasthttp"
@@ -166,68 +165,6 @@ func Execute() {
 	close(results)
 	close(curl)
 	defer urlsFile.Close()
-}
-
-/*
-func ReadFiles(results chan Results,files chan string){
-	rege, _ := getfile(*regexf)
-
-	for file := range files {
-		jsprefile, err := os.Open(file)
-		if err != nil {
-			fmt.Println("Unable to open file:", *jsfilename)
-			os.Exit(1)
-		}
-		jsfile, _ := io.ReadAll(jsprefile)
-
-		scanner := bufio.NewScanner(rege)
-		for scanner.Scan() {
-			func(reges string) {
-				log.Debug().Msg(scanner.Text())
-				nurex := regexp.MustCompile(reges)
-				bateu := nurex.FindString(string(jsfile))
-				if bateu != "" {
-					results <- Results{bateu, "FileName", reges, len(string(jsfile)) / 5}
-				}
-			}(scanner.Text())
-		}
-		wg.Done()
-	}
-	
-}
-*/
-
-func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-  rege, _ := getfile(*regexf)
-
-	req := fasthttp.AcquireRequest()
-	resp := fasthttp.AcquireResponse()
-	defer fasthttp.ReleaseRequest(req)
-	defer fasthttp.ReleaseResponse(resp)
-
-	for url := range curl {
-
-		req.SetRequestURI(url)
-
-		c.Do(req, resp)
-
-		html := resp.Body()
-
-		//var html need be a []byte
-		scanner := bufio.NewScanner(rege)
-		log.Debug().Msg(fmt.Sprintf("%v %s", Red("Url"), url))
-		for scanner.Scan() {
-			func(reges string) {
-				log.Debug().Msg(scanner.Text())
-				nurex := regexp.MustCompile(reges)
-				bateu := nurex.FindString(string(html))
-				if bateu != "" {
-					results <- Results{bateu, url, reges, len(html) / 5}
-				}
-			}(scanner.Text())
-		}
-		wg.Done()
-	}
 }
 
 func getfile(file string) (*os.File, bool) {
