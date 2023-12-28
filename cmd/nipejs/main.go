@@ -10,7 +10,6 @@ import (
 	"regexp"
 	"sync"
 	"time"
-	"io"
 
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
@@ -92,20 +91,14 @@ func Execute() {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
+
 	} else {
-		/*
-		jsfile, err := os.Open(*jsfilename)
-		if err != nil {
-			fmt.Println("Unable to open file:", *jsfilename)
-			os.Exit(1)
-		}
-		jsfile1, _ := io.ReadAll(jsfile)
-		go ReadFiles(results, curl)
-		*/
+		//tmpFilename := fmt.Sprintf("/tmp/nipejs_%d")
+		
 		for w := 1; w < *threads; w++ {
 			go ReadFiles(results,curl)
 		}
-		//input := bufio.NewScanner(files)
+		//input = bufio.NewScanner(jsfilename)
 	}
 
 	if *urls == "" {
@@ -175,6 +168,7 @@ func Execute() {
 	defer urlsFile.Close()
 }
 
+/*
 func ReadFiles(results chan Results,files chan string){
 	rege, _ := getfile(*regexf)
 
@@ -201,6 +195,7 @@ func ReadFiles(results chan Results,files chan string){
 	}
 	
 }
+*/
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
   rege, _ := getfile(*regexf)
