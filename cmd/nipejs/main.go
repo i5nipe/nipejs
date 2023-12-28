@@ -24,7 +24,7 @@ var (
 	silent  = flag.Bool("s", false, "Silent Mode")
 	threads = flag.Int("c", 50, "Set the concurrency level")
 	urls    = flag.String("u", "", "List of URLs to scan")
-	debug   = flag.Bool("b", false, "Debug mode (For developers)")
+	debug   = flag.Bool("b", false, "Debug mode")
 	timeout = flag.Int("timeout", 10, "Timeout in seconds")
 	version = flag.Bool("version", false, "Prints version information")
 	jsfilename 		= flag.String("f", "", "JsFile to scan")
@@ -90,14 +90,18 @@ func Execute() {
 			go GetBody(curl, results, c)
 		}
 	} else {
+		/*
 		jsfile, err := os.Open(*jsfilename)
 		if err != nil {
 			fmt.Println("Unable to open file:", *jsfilename)
 			os.Exit(1)
 		}
 		jsfile1, _ := io.ReadAll(jsfile)
-		go ReadFiles(results, jsfile1)
-
+		go ReadFiles(results, curl)
+		*/
+		for w := 1; w < *threads; w++ {
+			go ReadFiles(results,curl)
+		}
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -168,8 +172,16 @@ func Execute() {
 	defer file.Close()
 }
 
-func ReadFiles(results chan Results, jsfile []byte){
+func ReadFiles(results chan Results,file chan string){
 	rege, _ := getfile(*regexf)
+
+
+	jsprefile, err := os.Open(*jsfilename)
+	if err != nil {
+		fmt.Println("Unable to open file:", *jsfilename)
+		os.Exit(1)
+	}
+	jsfile, _ := io.ReadAll(jsprefile)
 
 	scanner := bufio.NewScanner(rege)
 	for scanner.Scan() {
@@ -182,6 +194,7 @@ func ReadFiles(results chan Results, jsfile []byte){
 			}
 		}(scanner.Text())
 	}
+	
 }
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
