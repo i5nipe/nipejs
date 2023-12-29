@@ -31,6 +31,7 @@ func createTMPfile(filename string, strings2write []string) (io.Reader){
 
 func ReadFiles(results chan Results,files chan string){
 	rege, _ := getfile(*regexf)
+	log.Debug().Msg("Started ReadFiles(function)")
 
 	for file := range files {
 		jsprefile, err := os.Open(file)
@@ -46,7 +47,7 @@ func ReadFiles(results chan Results,files chan string){
 				nurex := regexp.MustCompile(reges)
 				bateu := nurex.FindString(string(jsfile))
 				if bateu != "" {
-					results <- Results{bateu, "FileName", reges, len(string(jsfile)) / 5}
+					results <- Results{bateu, file, reges, len(string(jsfile)) / 5}
 				}
 			}(scanner.Text())
 		}

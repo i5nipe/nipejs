@@ -102,7 +102,8 @@ func Execute() {
 		input = bufio.NewScanner(tmpFile)
 	}
 
-	if *urls == "" {
+	if *urls != "" && *jsfilename != ""{
+		log.Debug().Msg("define input as Stdin")
 		input = bufio.NewScanner(os.Stdin)
 	}
 
