@@ -10,22 +10,25 @@ import (
 	"sync"
 	"time"
 
-	//. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
 	"github.com/valyala/fasthttp"
 )
 
 var (
-	regexf  = flag.String("r", "~/.config/nipejs/regex.txt", "Regex file")
-	usera   = flag.String("a", "Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0", "User-Agent")
-	silent  = flag.Bool("s", false, "Silent Mode")
-	threads = flag.Int("c", 50, "Set the concurrency level")
-	urls    = flag.String("u", "", "List of URLs to scan")
-	debug   = flag.Bool("b", false, "Debug mode")
-	timeout = flag.Int("timeout", 10, "Timeout in seconds")
-	version = flag.Bool("version", false, "Prints version information")
-	jsfilename 		= flag.String("f", "", "JsFile to scan")
+	regexf = flag.String("r", "~/.config/nipejs/regex.txt", "Regex file")
+	usera  = flag.String(
+		"a",
+		"Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0",
+		"User-Agent",
+	)
+	silent     = flag.Bool("s", false, "Silent Mode")
+	threads    = flag.Int("c", 50, "Set the concurrency level")
+	urls       = flag.String("u", "", "List of URLs to scan")
+	debug      = flag.Bool("b", false, "Debug mode")
+	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
+	version    = flag.Bool("version", false, "Prints version information")
+	jsfilename = flag.String("f", "", "JsFile to scan")
 )
 var wg sync.WaitGroup
 
@@ -51,7 +54,6 @@ func init() {
 		Banner()
 	} else {
 		log.DefaultLogger.SetMaxLevel(levels.LevelSilent)
-
 	}
 	if *regexf == "~/.config/nipejs/regex.txt" {
 		user, err := user.Current()
@@ -70,7 +72,7 @@ func Execute() {
 		},
 		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
 	}
-	//http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	// http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	urlsFile, _ := os.Open(*urls)
 
 	_, falha := getfile(*regexf)
@@ -81,7 +83,6 @@ func Execute() {
 
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
-
 
 	var input *bufio.Scanner
 
@@ -95,14 +96,14 @@ func Execute() {
 		tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
 
 		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
-		
+
 		for w := 1; w < *threads; w++ {
-			go ReadFiles(results,curl)
+			go ReadFiles(results, curl)
 		}
 		input = bufio.NewScanner(tmpFile)
 	}
 
-	if *urls != "" && *jsfilename != ""{
+	if *urls != "" && *jsfilename != "" {
 		log.Debug().Msg("define input as Stdin")
 		input = bufio.NewScanner(os.Stdin)
 	}
@@ -144,7 +145,8 @@ func Execute() {
 			case `key-[0-9a-zA-Z]{32}`:
 				resp.printdefault("Mailgun")
 				resp.printmailgun()
-			case `[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}`, `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`:
+			case `[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}`,
+				`[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`:
 				resp.printdefault("UUID")
 				resp.printresu()
 			case `(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}`:

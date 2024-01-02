@@ -1,8 +1,8 @@
 package nipejs
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"regexp"
 
 	. "github.com/logrusorgru/aurora/v3"
@@ -11,7 +11,7 @@ import (
 )
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-  rege, _ := getfile(*regexf)
+	rege, _ := getfile(*regexf)
 
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
@@ -26,20 +26,19 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 
 		html := resp.Body()
 
-		//var html need be a []byte
+		// var html need be a []byte
 		scanner := bufio.NewScanner(rege)
 		log.Debug().Msg(fmt.Sprintf("%v %s", Red("Url"), url))
 		for scanner.Scan() {
 			func(reges string) {
 				log.Debug().Msg(scanner.Text())
 				nurex := regexp.MustCompile(reges)
-				bateu := nurex.FindString(string(html))
-				if bateu != "" {
-					results <- Results{bateu, url, reges, len(html) / 5}
+				matches := nurex.FindAllString(string(html), -1)
+				for _, match := range matches {
+					results <- Results{match, url, reges, len(html) / 5}
 				}
 			}(scanner.Text())
 		}
 		wg.Done()
 	}
 }
-

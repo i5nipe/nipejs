@@ -14,13 +14,16 @@ var (
 )
 
 func Deuboa(mensagem string) {
-
 	params := url.Values{}
 	params.Add("chat_id", Chat_id)
 	params.Add("text", mensagem)
 	body := strings.NewReader(params.Encode())
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://api.telegram.org/bot%v/sendMessage", Bot), body)
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf("https://api.telegram.org/bot%v/sendMessage", Bot),
+		body,
+	)
 	if err != nil {
 		return
 	}

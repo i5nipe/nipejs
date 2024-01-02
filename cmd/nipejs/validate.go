@@ -54,8 +54,8 @@ func (resp Results) printheruko() {
 	resp.printresu()
 	if string(html) != "{\"id\":\"unauthorized\",\"message\":\"Invalid credentials provided.\"}" {
 		fmt.Printf("\t %s\n", Green(string(html)))
-		//Deuboa(fmt.Sprintf("[NipeJS] Heroku API Key\nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
-		//Deuboa(fmt.Sprintf("[NipeJS] Response Heroku\n\n%s", string(html)))
+		// Deuboa(fmt.Sprintf("[NipeJS] Heroku API Key\nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
+		// Deuboa(fmt.Sprintf("[NipeJS] Response Heroku\n\n%s", string(html)))
 	} else {
 		fmt.Printf("\t %s\n", Red(string(html)))
 	}
@@ -85,8 +85,8 @@ func (resp Results) printmailgun() {
 	resp.printresu()
 	if string(html) != "{\"message\":\"Invalid private key\"}" {
 		fmt.Printf("\t %s\n", Green(string(html)))
-		//Deuboa(fmt.Sprintf("[NipeJS] API KEY Mailgun \nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
-		//Deuboa(fmt.Sprintf("[NipeJS] Response Mailgun\n\n%s", string(html)))
+		// Deuboa(fmt.Sprintf("[NipeJS] API KEY Mailgun \nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
+		// Deuboa(fmt.Sprintf("[NipeJS] Response Mailgun\n\n%s", string(html)))
 	} else {
 		fmt.Printf("\t %s\n", Red(string(html)))
 	}
@@ -126,7 +126,7 @@ func (resp Results) printrecaptcha() {
 	} else {
 		resp.printresu()
 		fmt.Printf("%s\n", Green(string(html)))
-		//Deuboa(fmt.Sprintf("[NipeJS] API Recaptcha\nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
-		//Deuboa(fmt.Sprintf("[NipeJS] Response Recaptcha\n\n%s", string(html)))
+		// Deuboa(fmt.Sprintf("[NipeJS] API Recaptcha\nAPI:* %s *\nUrl:* %s *\nRegex:* %s *", resp.Resu, resp.Url, resp.Regex))
+		// Deuboa(fmt.Sprintf("[NipeJS] Response Recaptcha\n\n%s", string(html)))
 	}
 }
