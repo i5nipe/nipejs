@@ -29,6 +29,7 @@ var (
 	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
 	version    = flag.Bool("version", false, "Prints version information")
 	jsfilename = flag.String("f", "", "JsFile to scan")
+	jsdir      = flag.String("d", "", "Directory to scan all the files")
 )
 var wg sync.WaitGroup
 
@@ -86,7 +87,9 @@ func Execute() {
 
 	var input *bufio.Scanner
 
-	if *jsfilename == "" {
+	isStdin := *urls == "" && *jsfilename == ""
+
+	if *jsfilename == "" && *jsdir == "" {
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
@@ -101,9 +104,10 @@ func Execute() {
 			go ReadFiles(results, curl)
 		}
 		input = bufio.NewScanner(tmpFile)
+		os.Remove(tmpFilename)
 	}
 
-	if *urls == "" && *jsfilename == "" {
+	if isStdin {
 		log.Debug().Msg("define input as Stdin")
 		input = bufio.NewScanner(os.Stdin)
 	}
