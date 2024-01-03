@@ -91,17 +91,21 @@ func Execute() {
 	// If the input is STDIN (-u, -f or -d not especified)
 	case *urls == "" && *jsfilename == "" && *jsdir == "":
 		log.Debug().Msg("define input as Stdin")
+		for w := 1; w < *threads; w++ {
+			go GetBody(curl, results, c)
+		}
 		input = bufio.NewScanner(os.Stdin)
 
-		// If the input is for urls (-u especified)
+	// If the input is for urls (-u especified)
 	case *jsfilename == "" && *jsdir == "":
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
+
+		// If the input is for especified files (-f)
 	case *jsfilename != "" && *jsdir == "":
 		tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
-
 		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
 
 		for w := 1; w < *threads; w++ {
