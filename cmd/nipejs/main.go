@@ -87,6 +87,8 @@ func Execute() {
 
 	var input *bufio.Scanner
 
+	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
+
 	switch {
 	// If the input is STDIN (-u, -f or -d not especified)
 	case *urls == "" && *jsfilename == "" && *jsdir == "":
@@ -97,21 +99,26 @@ func Execute() {
 		input = bufio.NewScanner(os.Stdin)
 
 	// If the input is for urls (-u especified)
-	case *jsfilename == "" && *jsdir == "":
+	case *jsfilename == "" && *jsdir == "" && *urls != "":
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
 
 		// If the input is for especified files (-f)
-	case *jsfilename != "" && *jsdir == "":
-		tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
+	case *jsfilename != "" && *jsdir == "" && *urls == "":
 		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
 
 		for w := 1; w < *threads; w++ {
 			go ReadFiles(results, curl)
 		}
 		input = bufio.NewScanner(tmpFile)
+
+	case *jsdir != "" && *jsfilename == "" && *urls == "":
+		log.Fatal().Msg("Scanning all files on the directory")
+
+	default:
+		log.Fatal().Msg("You can only specify one input method (-d, -f, or -u).")
 	}
 
 	go func() {
