@@ -2,7 +2,6 @@ package nipejs
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -46,9 +45,9 @@ func scanFolder(tmpfilename string, foldername string) io.Reader {
 		return nil
 	})
 
-	log.Debug().Msg(fmt.Sprintf("Files: %s", relativePaths))
+	log.Debug().Msgf("Files: %s", relativePaths)
 	if err != nil {
-		log.Fatal().Msg("Unable to read all files in the directory")
+		log.Error().Msgf("%s", err)
 	}
 
 	r := createTMPfile(tmpfilename, relativePaths)
@@ -61,7 +60,7 @@ func ReadFiles(results chan Results, files chan string) {
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
-			log.Error().Msg(fmt.Sprintf("Unable to open file: %s", file))
+			log.Error().Msgf("Unable to open file: %s", file)
 			wg.Done()
 			continue
 		}

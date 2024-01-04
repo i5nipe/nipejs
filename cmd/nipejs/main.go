@@ -59,7 +59,7 @@ func init() {
 	if *regexf == "~/.config/nipejs/regex.txt" {
 		user, err := user.Current()
 		if err != nil {
-			log.Fatal().Msg(fmt.Sprintf("%s", err))
+			log.Fatal().Msgf("%s", err)
 		}
 		*regexf = fmt.Sprintf("%s/.config/nipejs/regex.txt", user.HomeDir)
 	}
