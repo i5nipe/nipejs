@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 
 	log "github.com/projectdiscovery/gologger"
@@ -25,6 +26,38 @@ func createTMPfile(filename string, strings2write []string) io.Reader {
 	}
 	tmpfile, _ := os.Open(filename)
 	return tmpfile
+}
+
+func scanFolder(tmpfilename string, foldername string) io.Reader {
+	fileInfo, err := os.Stat(foldername)
+	if err != nil || !fileInfo.IsDir() {
+		log.Fatal().Msg("Unable to read the directory")
+	}
+	var relativePaths []string
+
+	err = filepath.Walk(foldername, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if path != foldername {
+			relativePath, err := filepath.Rel(foldername, path)
+			if err != nil {
+				return err
+			}
+			relativePath = foldername + "/" + relativePath
+			relativePaths = append(relativePaths, relativePath)
+		}
+		return nil
+	})
+
+	fmt.Println(relativePaths)
+
+	if err != nil {
+		log.Fatal().Msg("Unable to read all files in the directory")
+	}
+
+	r := createTMPfile(tmpfilename, relativePaths)
+	return r
 }
 
 func ReadFiles(results chan Results, files chan string) {

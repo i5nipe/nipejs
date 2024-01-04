@@ -109,13 +109,20 @@ func Execute() {
 	case *jsfilename != "" && *jsdir == "" && *urls == "":
 		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
 
-		for w := 1; w < *threads; w++ {
+		for w := 0; w < 1; w++ {
 			go ReadFiles(results, curl)
 		}
 		input = bufio.NewScanner(tmpFile)
 
+		// If the input is for folders (-d)
 	case *jsdir != "" && *jsfilename == "" && *urls == "":
-		log.Fatal().Msg("Scanning all files on the directory")
+		tmpFile := scanFolder(tmpFilename, *jsdir)
+
+		for w := 0; w < *threads; w++ {
+			go ReadFiles(results, curl)
+		}
+
+		input = bufio.NewScanner(tmpFile)
 
 	default:
 		log.Fatal().Msg("You can only specify one input method (-d, -f, or -u).")
