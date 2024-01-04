@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/user"
 	"sync"
@@ -106,8 +107,18 @@ func Execute() {
 
 		// If the input is for folders (-d)
 	case *jsdir != "" && *urls == "":
-		tmpFile := scanFolder(tmpFilename, *jsdir) // For directories
-		tmpFile = createTMPfile(tmpFilename, []string{*jsdir})
+		fileInfo, err := os.Stat(*jsdir)
+		if err != nil {
+			log.Fatal().Msg("Could not open Directory")
+		}
+
+		var tmpFile io.Reader
+
+		if fileInfo.IsDir() {
+			tmpFile = scanFolder(tmpFilename, *jsdir) // For directories
+		} else {
+			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For files
+		}
 
 		for w := 0; w < *threads; w++ {
 			go ReadFiles(results, curl)
