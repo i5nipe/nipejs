@@ -29,13 +29,9 @@ func createTMPfile(filename string, strings2write []string) io.Reader {
 }
 
 func scanFolder(tmpfilename string, foldername string) io.Reader {
-	fileInfo, err := os.Stat(foldername)
-	if err != nil || !fileInfo.IsDir() {
-		log.Fatal().Msg("Unable to read the directory")
-	}
 	var relativePaths []string
 
-	err = filepath.Walk(foldername, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(foldername, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -50,8 +46,7 @@ func scanFolder(tmpfilename string, foldername string) io.Reader {
 		return nil
 	})
 
-	fmt.Println(relativePaths)
-
+	log.Debug().Msg(fmt.Sprintf("Files: %s", relativePaths))
 	if err != nil {
 		log.Fatal().Msg("Unable to read all files in the directory")
 	}
@@ -62,12 +57,13 @@ func scanFolder(tmpfilename string, foldername string) io.Reader {
 
 func ReadFiles(results chan Results, files chan string) {
 	rege, _ := getfile(*regexf)
-	log.Debug().Msg("Started ReadFiles(function)")
 
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
-			log.Fatal().Msg(fmt.Sprintf("Unable to open file: %s", *jsdir))
+			log.Error().Msg(fmt.Sprintf("Unable to open file: %s", file))
+			wg.Done()
+			continue
 		}
 		jsfile, _ := io.ReadAll(jsprefile)
 
