@@ -67,7 +67,7 @@ func ReadFiles(results chan Results, files chan string) {
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
-			log.Fatal().Msg(fmt.Sprintf("Unable to open file: %s", *jsfilename))
+			log.Fatal().Msg(fmt.Sprintf("Unable to open file: %s", *jsdir))
 		}
 		jsfile, _ := io.ReadAll(jsprefile)
 

@@ -22,14 +22,13 @@ var (
 		"Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0",
 		"User-Agent",
 	)
-	silent     = flag.Bool("s", false, "Silent Mode")
-	threads    = flag.Int("c", 50, "Set the concurrency level")
-	urls       = flag.String("u", "", "List of URLs to scan")
-	debug      = flag.Bool("b", false, "Debug mode")
-	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
-	version    = flag.Bool("version", false, "Prints version information")
-	jsfilename = flag.String("f", "", "JsFile to scan")
-	jsdir      = flag.String("d", "", "Directory to scan all the files")
+	silent  = flag.Bool("s", false, "Silent Mode")
+	threads = flag.Int("c", 50, "Set the concurrency level")
+	urls    = flag.String("u", "", "List of URLs to scan")
+	debug   = flag.Bool("b", false, "Debug mode")
+	timeout = flag.Int("timeout", 10, "Timeout in seconds")
+	version = flag.Bool("version", false, "Prints version information")
+	jsdir   = flag.String("d", "", "Directory to scan all the files")
 )
 var wg sync.WaitGroup
 
@@ -91,7 +90,7 @@ func Execute() {
 
 	switch {
 	// If the input is STDIN (-u, -f or -d not especified)
-	case *urls == "" && *jsfilename == "" && *jsdir == "":
+	case *urls == "" && *jsdir == "":
 		log.Debug().Msg("define input as Stdin")
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
@@ -99,24 +98,16 @@ func Execute() {
 		input = bufio.NewScanner(os.Stdin)
 
 	// If the input is for urls (-u especified)
-	case *jsfilename == "" && *jsdir == "" && *urls != "":
+	case *jsdir == "" && *urls != "":
 		for w := 1; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
 
-		// If the input is for especified files (-f)
-	case *jsfilename != "" && *jsdir == "" && *urls == "":
-		tmpFile := createTMPfile(tmpFilename, []string{*jsfilename})
-
-		for w := 0; w < 1; w++ {
-			go ReadFiles(results, curl)
-		}
-		input = bufio.NewScanner(tmpFile)
-
 		// If the input is for folders (-d)
-	case *jsdir != "" && *jsfilename == "" && *urls == "":
-		tmpFile := scanFolder(tmpFilename, *jsdir)
+	case *jsdir != "" && *urls == "":
+		tmpFile := scanFolder(tmpFilename, *jsdir) // For directories
+		tmpFile = createTMPfile(tmpFilename, []string{*jsdir})
 
 		for w := 0; w < *threads; w++ {
 			go ReadFiles(results, curl)
@@ -125,7 +116,7 @@ func Execute() {
 		input = bufio.NewScanner(tmpFile)
 
 	default:
-		log.Fatal().Msg("You can only specify one input method (-d, -f, or -u).")
+		log.Fatal().Msg("You can only specify one input method (-d or -u).")
 	}
 
 	go func() {
