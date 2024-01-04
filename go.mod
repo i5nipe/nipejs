@@ -9,3 +9,5 @@ require (
 	github.com/valyala/fasthttp v1.30.0 // indirect
 	golang.org/x/tools v0.16.1 // indirect
 )
+
+// license MIT
