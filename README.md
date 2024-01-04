@@ -13,18 +13,20 @@ go install github.com/i5nipe/nipejs@latest
 
 - You don't need to specify the regex file if you put it in `~/.config/nipejs/regex.txt`.
 
-- This tool has some special regex, e.g. decrypt base64 strings.
+- This tool has some special regex with special actions, e.g. decrypt base64 strings.
 
 - Automatically test the authenticity of some API keys 
 
 ## ☕ Usage examples
 
 ```bash
+cat jsUrlsList | nipejs -r regex.txt
+
 nipejs -u jsfile -r regex.txt
 
 nipejs -u ~/Path/to/jsfile -s -r regex.txt
 
-cat jsfile | nipejs -r regex.txt
+nipejs -d dir/ -r regex.txt
 ```
 
 ## Credits
