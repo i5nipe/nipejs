@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"os/user"
 	"sync"
@@ -87,7 +88,7 @@ func Execute() {
 
 	var input *bufio.Scanner
 
-	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d", time.Now().UnixNano())
+	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", time.Now().UnixNano(), rand.Intn(100))
 
 	switch {
 	// If the input is STDIN (-u, -f or -d not especified)
@@ -113,11 +114,15 @@ func Execute() {
 		}
 
 		var tmpFile io.Reader
-		var thread int
+		var thread, countFiles int
 
 		if fileInfo.IsDir() {
-			tmpFile = scanFolder(tmpFilename, *jsdir) // For directories
-			thread = *threads
+			tmpFile, countFiles = scanFolder(tmpFilename, *jsdir) // For directories
+			if countFiles < *threads {
+				thread = countFiles
+			} else {
+				thread = *threads
+			}
 		} else {
 			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For file
 			thread = 1
@@ -189,6 +194,7 @@ func Execute() {
 	for input.Scan() {
 		curl <- input.Text()
 		wg.Add(1)
+		log.Debug().Msgf("WaitGroup Counter: %v", wg)
 	}
 
 	wg.Wait()
@@ -204,4 +210,11 @@ func getfile(file string) (*os.File, bool) {
 		return rege, true
 	}
 	return rege, false
+}
+
+func MatchRegex() {
+	rege, err := os.Open(*regexf)
+	if err != nil {
+		log.Fatal().Msgf("%v", err)
+	}
 }

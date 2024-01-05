@@ -27,7 +27,7 @@ func createTMPfile(filename string, strings2write []string) io.Reader {
 	return tmpfile
 }
 
-func scanFolder(tmpfilename string, foldername string) io.Reader {
+func scanFolder(tmpfilename string, foldername string) (io.Reader, int) {
 	var relativePaths []string
 
 	err := filepath.Walk(foldername, func(path string, info os.FileInfo, err error) error {
@@ -51,7 +51,7 @@ func scanFolder(tmpfilename string, foldername string) io.Reader {
 	}
 
 	r := createTMPfile(tmpfilename, relativePaths)
-	return r
+	return r, len(relativePaths)
 }
 
 func ReadFiles(results chan Results, files chan string) {
