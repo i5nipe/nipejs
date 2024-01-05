@@ -116,7 +116,7 @@ func Execute() {
 		}
 		input = bufio.NewScanner(urlsFile)
 
-		// If the input is for folders (-d)
+		// If the input is for file or folder (-d)
 	case *jsdir != "" && *urls == "":
 		fileInfo, err := os.Stat(*jsdir)
 		if err != nil {
@@ -136,6 +136,7 @@ func Execute() {
 			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For file
 			thread = 1
 		}
+		defer os.Remove(tmpFilename)
 
 		log.Debug().Msgf("Threads open: %d", thread)
 		for w := 0; w < thread; w++ {

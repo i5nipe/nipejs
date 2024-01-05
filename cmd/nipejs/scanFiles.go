@@ -63,6 +63,7 @@ func ReadFiles(results chan Results, files chan string) {
 		jsfile, _ := io.ReadAll(jsprefile)
 
 		matchRegex(string(jsfile), file, results)
+		jsprefile.Close()
 		wg.Done()
 	}
 }
