@@ -1,17 +1,10 @@
 package nipejs
 
 import (
-	"bufio"
-	"regexp"
-
-	. "github.com/logrusorgru/aurora/v3"
-	log "github.com/projectdiscovery/gologger"
 	"github.com/valyala/fasthttp"
 )
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-	rege, _ := getfile(*regexf)
-
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseRequest(req)
@@ -25,19 +18,8 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 
 		html := resp.Body()
 
-		// var html need be a []byte
-		scanner := bufio.NewScanner(rege)
-		log.Debug().Msgf("%v %s", Red("Url"), url)
-		for scanner.Scan() {
-			func(reges string) {
-				log.Debug().Msg(scanner.Text())
-				nurex := regexp.MustCompile(reges)
-				matches := nurex.FindAllString(string(html), -1)
-				for _, match := range matches {
-					results <- Results{match, url, reges, len(html) / 5}
-				}
-			}(scanner.Text())
-		}
+		matchRegex(string(html), url, results)
+
 		wg.Done()
 	}
 }

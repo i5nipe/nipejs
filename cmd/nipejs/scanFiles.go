@@ -1,11 +1,9 @@
 package nipejs
 
 import (
-	"bufio"
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 
 	log "github.com/projectdiscovery/gologger"
 )
@@ -55,8 +53,6 @@ func scanFolder(tmpfilename string, foldername string) (io.Reader, int) {
 }
 
 func ReadFiles(results chan Results, files chan string) {
-	rege, _ := getfile(*regexf)
-
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
@@ -66,17 +62,7 @@ func ReadFiles(results chan Results, files chan string) {
 		}
 		jsfile, _ := io.ReadAll(jsprefile)
 
-		scanner := bufio.NewScanner(rege)
-		for scanner.Scan() {
-			func(reges string) {
-				// log.Debug().Msg(scanner.Text())
-				nurex := regexp.MustCompile(reges)
-				matches := nurex.FindAllString(string(jsfile), -1)
-				for _, match := range matches {
-					results <- Results{match, file, reges, len(string(jsfile)) / 5}
-				}
-			}(scanner.Text())
-		}
+		matchRegex(string(jsfile), file, results)
 		wg.Done()
 	}
 }

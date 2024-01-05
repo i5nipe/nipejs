@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"os/user"
+	"regexp"
 	"sync"
 	"time"
 
@@ -94,14 +95,16 @@ func Execute() {
 	// If the input is STDIN (-u, -f or -d not especified)
 	case *urls == "" && *jsdir == "":
 		log.Debug().Msg("define input as Stdin")
-		for w := 1; w < *threads; w++ {
+		log.Debug().Msgf("Threads open: %d", *threads)
+		for w := 0; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(os.Stdin)
 
 	// If the input is for urls (-u especified)
 	case *jsdir == "" && *urls != "":
-		for w := 1; w < *threads; w++ {
+		log.Debug().Msgf("Threads open: %d", *threads)
+		for w := 0; w < *threads; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
@@ -212,9 +215,20 @@ func getfile(file string) (*os.File, bool) {
 	return rege, false
 }
 
-func MatchRegex() {
-	rege, err := os.Open(*regexf)
+func matchRegex(target string, rlocation string, results chan Results) {
+	regexsfile, err := os.Open(*regexf)
 	if err != nil {
 		log.Fatal().Msgf("%v", err)
+	}
+
+	regexList := bufio.NewScanner(regexsfile)
+	for regexList.Scan() {
+		func(regex string) {
+			nurex := regexp.MustCompile(regex)
+			matches := nurex.FindAllString(target, -1)
+			for _, match := range matches {
+				results <- Results{match, rlocation, regex, len(target) / 5}
+			}
+		}(regexList.Text())
 	}
 }
