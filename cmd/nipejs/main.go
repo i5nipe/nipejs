@@ -113,14 +113,18 @@ func Execute() {
 		}
 
 		var tmpFile io.Reader
+		var thread int
 
 		if fileInfo.IsDir() {
 			tmpFile = scanFolder(tmpFilename, *jsdir) // For directories
+			thread = *threads
 		} else {
-			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For files
+			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For file
+			thread = 1
 		}
 
-		for w := 0; w < *threads; w++ {
+		log.Debug().Msgf("Threads open: %d", thread)
+		for w := 0; w < thread; w++ {
 			go ReadFiles(results, curl)
 		}
 

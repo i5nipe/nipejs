@@ -69,7 +69,7 @@ func ReadFiles(results chan Results, files chan string) {
 		scanner := bufio.NewScanner(rege)
 		for scanner.Scan() {
 			func(reges string) {
-				log.Debug().Msg(scanner.Text())
+				// log.Debug().Msg(scanner.Text())
 				nurex := regexp.MustCompile(reges)
 				matches := nurex.FindAllString(string(jsfile), -1)
 				for _, match := range matches {
