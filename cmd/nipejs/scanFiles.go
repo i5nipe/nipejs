@@ -37,8 +37,13 @@ func scanFolder(tmpfilename string, foldername string) (io.Reader, int) {
 			if err != nil {
 				return err
 			}
-			relativePath = foldername + "/" + relativePath
-			relativePaths = append(relativePaths, relativePath)
+			if foldername[len(foldername)-1] == '/' {
+				relativePath = foldername + relativePath
+				relativePaths = append(relativePaths, relativePath)
+			} else {
+				relativePath = foldername + "/" + relativePath
+				relativePaths = append(relativePaths, relativePath)
+			}
 		}
 		return nil
 	})
