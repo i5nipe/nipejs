@@ -78,8 +78,8 @@ func Execute() {
 	// http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	urlsFile, _ := os.Open(*urls)
 
-	_, falha := getfile(*regexf)
-	if falha {
+	_, err := getfile(*regexf)
+	if err {
 		fmt.Println("Unable to open regexps file")
 		return
 	}
@@ -88,6 +88,7 @@ func Execute() {
 	curl := make(chan string, *threads)
 
 	var input *bufio.Scanner
+	var thread, countFiles int
 
 	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", time.Now().UnixNano(), rand.Intn(100))
 
@@ -103,8 +104,14 @@ func Execute() {
 
 	// If the input is for urls (-u especified)
 	case *jsdir == "" && *urls != "":
-		log.Debug().Msgf("Threads open: %d", *threads)
-		for w := 0; w < *threads; w++ {
+		lines, _ := countLines(*urls)
+		if lines < *threads {
+			thread = lines
+		} else {
+			thread = *threads
+		}
+		log.Debug().Msgf("Threads open: %d", thread)
+		for w := 0; w < thread; w++ {
 			go GetBody(curl, results, c)
 		}
 		input = bufio.NewScanner(urlsFile)
@@ -117,7 +124,6 @@ func Execute() {
 		}
 
 		var tmpFile io.Reader
-		var thread, countFiles int
 
 		if fileInfo.IsDir() {
 			tmpFile, countFiles = scanFolder(tmpFilename, *jsdir) // For directories
@@ -197,7 +203,6 @@ func Execute() {
 	for input.Scan() {
 		curl <- input.Text()
 		wg.Add(1)
-		log.Debug().Msgf("WaitGroup Counter: %v", wg)
 	}
 
 	wg.Wait()
