@@ -89,7 +89,8 @@ func Execute() {
 
 	var input *bufio.Scanner
 	var thread, countFiles, totalScan int
-	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", time.Now().UnixNano(), rand.Intn(100))
+	StartTimestamp := time.Now().UnixNano()
+	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", StartTimestamp, rand.Intn(100))
 
 	switch {
 	// If the input is STDIN (-u, -f or -d not especified)
@@ -211,8 +212,11 @@ func Execute() {
 
 	close(results)
 	close(curl)
+	endTimestamp := time.Now().UnixNano()
+	executionTime := calculateSeconds(StartTimestamp, endTimestamp)
 	defer urlsFile.Close()
-	defer log.Info().Msgf("Nipejs: %d files analize in %s", totalScan, tmpFilename)
+	defer log.Info().
+		Msgf("Nipejs: %d files analized in %d seconds", totalScan, executionTime)
 }
 
 func getfile(file string) (*os.File, bool) {
@@ -239,4 +243,18 @@ func matchRegex(target string, rlocation string, results chan Results) {
 			}
 		}(regexList.Text())
 	}
+}
+
+func calculateSeconds(startTimestamp, endTimestamp int64) int64 {
+	// Convert Unix nano timestamps to time.Time
+	startTime := time.Unix(0, startTimestamp)
+	endTime := time.Unix(0, endTimestamp)
+
+	// Calculate the duration between two timestamps
+	duration := endTime.Sub(startTime)
+
+	// Extract the total seconds from the duration
+	totalSeconds := int64(duration.Seconds())
+
+	return totalSeconds
 }
