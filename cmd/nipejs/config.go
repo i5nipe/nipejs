@@ -8,6 +8,8 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+
+	log "github.com/projectdiscovery/gologger"
 )
 
 func FirstTime() error {
@@ -27,19 +29,19 @@ func FirstTime() error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Create Dir: %s\n", configDirPath)
+		log.Debug().Msgf("Create Dir: %s\n", configDirPath)
 	}
 
 	// Check if the configuration file exists
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
-		fmt.Println("It looks like this is the first time you're running Nipejs.")
-		fmt.Println("Would you like to download the default regex file from GitHub? (Y/n)")
+		log.Info().Msg("It looks like this is the first time you're running Nipejs.")
+		log.Info().Msg("Would you like to download the default regex file from GitHub? (Y/n)")
 
 		reader := bufio.NewReader(os.Stdin)
 		answer, _ := reader.ReadString('\n')
 
 		if answer == "n\n" {
-			fmt.Println("No action taken. You can manually set up your configuration later.")
+			log.Debug().Msg("No action taken. You can manually set up your configuration later.")
 			createConfig(configFilePath)
 		} else {
 			err := downloadRegex(regexFilePath, defaultRegexURL)
@@ -47,7 +49,7 @@ func FirstTime() error {
 				return err
 			}
 			createConfig(configFilePath)
-			fmt.Printf("Default regex file downloaded and saved to %s.\n", regexFilePath)
+			log.Debug().Msgf("Default regex file downloaded and saved to %s.\n", regexFilePath)
 		}
 	}
 
@@ -74,7 +76,7 @@ func downloadRegex(destPath string, url string) error {
 	defer file.Close()
 
 	// Download the file from the URL and save it to the destination file
-	req, err := http.NewRequest("Get", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
@@ -93,7 +95,7 @@ func downloadRegex(destPath string, url string) error {
 		return err
 	}
 
-	fmt.Printf("Downloaded default regex file from: %s\n", url)
+	log.Debug().Msgf("Downloaded default regex file from: %s\n", url)
 	return nil
 }
 
