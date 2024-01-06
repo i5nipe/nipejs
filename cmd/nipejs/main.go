@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
 	"github.com/valyala/fasthttp"
@@ -220,7 +221,7 @@ func Execute() {
 	executionTime := calculateSeconds(StartTimestamp, endTimestamp)
 	defer urlsFile.Close()
 	defer log.Info().
-		Msgf("Nipejs done: %d files with %d regex patterns scanned in %.2f seconds", totalScan, allRegex, executionTime)
+		Msgf("Nipejs done: %d files with %d regex patterns scanned in %.2f seconds", Magenta(totalScan).Bold(), Cyan(allRegex).Bold(), Red(executionTime).Bold())
 }
 
 func matchRegex(target string, rlocation string, results chan Results) {
