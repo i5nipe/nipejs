@@ -9,6 +9,7 @@ import (
 	"os/user"
 	"path/filepath"
 
+	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 )
 
@@ -34,8 +35,10 @@ func FirstTime() error {
 
 	// Check if the configuration file exists
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
-		log.Info().Msg("It looks like this is the first time you're running Nipejs.")
-		log.Info().Msg("Would you like to download the default regex file from GitHub? (Y/n)")
+		log.Info().
+			Msgf("It looks like this is the %v you're running %v.", Magenta("first time").Bold(), Cyan("NipeJS").Bold())
+		log.Info().
+			Msgf("Would you like to %v the default regex file from GitHub? (%v/n)", Magenta("download").Bold(), Cyan("Y").Bold())
 
 		reader := bufio.NewReader(os.Stdin)
 		answer, _ := reader.ReadString('\n')
