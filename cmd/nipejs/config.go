@@ -84,7 +84,7 @@ func downloadRegex(destPath string, url string) error {
 		return err
 	}
 
-	req.Header.Set("Location", fmt.Sprintf("Nipejs %s", Version))
+	req.Header.Set("Location", fmt.Sprintf("https://i5nipe/nipejs/%s", Version))
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
