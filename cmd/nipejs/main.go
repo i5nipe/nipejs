@@ -69,6 +69,11 @@ func init() {
 }
 
 func Execute() {
+	err := FirstTime()
+	if err != nil {
+		log.Error().Msgf("%v", err)
+	}
+
 	// Configs
 	c := &fasthttp.Client{
 		Name: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36",
@@ -78,7 +83,7 @@ func Execute() {
 		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
 	}
 	urlsFile, _ := os.Open(*urls)
-	_, err := os.Open(*regexf)
+	_, err = os.Open(*regexf)
 	if err != nil {
 		fmt.Println("Unable to open regexps file")
 		return
@@ -220,7 +225,8 @@ func Execute() {
 	endTimestamp := time.Now().UnixNano()
 	executionTime := calculateSeconds(StartTimestamp, endTimestamp)
 	defer urlsFile.Close()
-	defer log.Info().
+	fmt.Println("")
+	log.Info().
 		Msgf("Nipejs done: %d files with %d regex patterns scanned in %.2f seconds", Magenta(totalScan).Bold(), Cyan(allRegex).Bold(), Red(executionTime).Bold())
 }
 
