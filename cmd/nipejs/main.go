@@ -88,8 +88,7 @@ func Execute() {
 	curl := make(chan string, *threads)
 
 	var input *bufio.Scanner
-	var thread, countFiles int
-
+	var thread, countFiles, totalScan int
 	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", time.Now().UnixNano(), rand.Intn(100))
 
 	switch {
@@ -105,6 +104,7 @@ func Execute() {
 	// If the input is for urls (-u especified)
 	case *jsdir == "" && *urls != "":
 		lines, _ := countLines(*urls)
+		totalScan = lines
 		if lines < *threads {
 			thread = lines
 		} else {
@@ -118,6 +118,7 @@ func Execute() {
 
 		// If the input is for file or folder (-d)
 	case *jsdir != "" && *urls == "":
+		log.Debug().Msg(*jsdir)
 		fileInfo, err := os.Stat(*jsdir)
 		if err != nil {
 			log.Fatal().Msg("Could not open Directory")
@@ -211,6 +212,7 @@ func Execute() {
 	close(results)
 	close(curl)
 	defer urlsFile.Close()
+	defer log.Info().Msgf("Nipejs: %d files analize in %s", totalScan, tmpFilename)
 }
 
 func getfile(file string) (*os.File, bool) {
