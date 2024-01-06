@@ -68,6 +68,7 @@ func init() {
 }
 
 func Execute() {
+	// Configs
 	c := &fasthttp.Client{
 		Name: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36",
 		TLSConfig: &tls.Config{
@@ -75,23 +76,20 @@ func Execute() {
 		},
 		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
 	}
-	// http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	urlsFile, _ := os.Open(*urls)
-
-	_, err := getfile(*regexf)
-	if err {
+	_, err := os.Open(*regexf)
+	if err != nil {
 		fmt.Println("Unable to open regexps file")
 		return
 	}
-
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
-
 	var input *bufio.Scanner
 	var thread, countFiles, totalScan int
 	StartTimestamp := time.Now().UnixNano()
 	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", StartTimestamp, rand.Intn(100))
 
+	// Switch case that define the Input Type
 	switch {
 	// If the input is STDIN (-u, -f or -d not especified)
 	case *urls == "" && *jsdir == "":
@@ -105,7 +103,6 @@ func Execute() {
 	// If the input is for urls (-u especified)
 	case *jsdir == "" && *urls != "":
 		lines, _ := countLines(*urls)
-		totalScan = lines
 		if lines < *threads {
 			thread = lines
 		} else {
@@ -127,6 +124,7 @@ func Execute() {
 
 		var tmpFile io.Reader
 
+		// Scan a full Folder
 		if fileInfo.IsDir() {
 			tmpFile, countFiles = scanFolder(tmpFilename, *jsdir) // For directories
 			if countFiles < *threads {
@@ -134,6 +132,7 @@ func Execute() {
 			} else {
 				thread = *threads
 			}
+			// Scan only one file
 		} else {
 			tmpFile = createTMPfile(tmpFilename, []string{*jsdir}) // For file
 			thread = 1
@@ -141,6 +140,8 @@ func Execute() {
 		defer os.Remove(tmpFilename)
 
 		log.Debug().Msgf("Threads open: %d", thread)
+
+		// Gouroutines That will wait for the input on channel 'curl'
 		for w := 0; w < thread; w++ {
 			go ReadFiles(results, curl)
 		}
@@ -204,27 +205,21 @@ func Execute() {
 		}
 	}()
 	for input.Scan() {
-		curl <- input.Text()
+		// Send the input value to the functions that will match the regexs
 		wg.Add(1)
+		totalScan += 1
+		curl <- input.Text()
 	}
-
 	wg.Wait()
 
+	// Ending program
 	close(results)
 	close(curl)
 	endTimestamp := time.Now().UnixNano()
 	executionTime := calculateSeconds(StartTimestamp, endTimestamp)
 	defer urlsFile.Close()
 	defer log.Info().
-		Msgf("Nipejs: %d files analized in %d seconds", totalScan, executionTime)
-}
-
-func getfile(file string) (*os.File, bool) {
-	rege, err := os.Open(file)
-	if err != nil {
-		return rege, true
-	}
-	return rege, false
+		Msgf("Nipejs done: %d files (x regex patterns) scanned in %.2f seconds", totalScan, executionTime)
 }
 
 func matchRegex(target string, rlocation string, results chan Results) {
@@ -245,7 +240,7 @@ func matchRegex(target string, rlocation string, results chan Results) {
 	}
 }
 
-func calculateSeconds(startTimestamp, endTimestamp int64) int64 {
+func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
 	// Convert Unix nano timestamps to time.Time
 	startTime := time.Unix(0, startTimestamp)
 	endTime := time.Unix(0, endTimestamp)
@@ -253,8 +248,5 @@ func calculateSeconds(startTimestamp, endTimestamp int64) int64 {
 	// Calculate the duration between two timestamps
 	duration := endTime.Sub(startTime)
 
-	// Extract the total seconds from the duration
-	totalSeconds := int64(duration.Seconds())
-
-	return totalSeconds
+	return duration.Seconds()
 }
