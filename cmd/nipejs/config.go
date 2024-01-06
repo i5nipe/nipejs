@@ -3,6 +3,8 @@ package nipejs
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -12,6 +14,7 @@ func FirstTime() error {
 	configFilePath := "~/.config/nipejs/.config"
 	configDirPath := "~/.config/nipejs"
 	regexFilePath := "~/.config/nipejs/regex.txt"
+	defaultRegexURL := "https://raw.githubusercontent.com/i5nipe/nipejs/master/files/regex.txt"
 
 	// Expand user home directory in file paths
 	configFilePath, _ = expandHomeDir(configFilePath)
@@ -20,12 +23,11 @@ func FirstTime() error {
 
 	// Create the Config Directory if not exists
 	if _, err := os.Stat(configDirPath); os.IsNotExist(err) {
-		file, err := os.Create(configFilePath)
+		err := os.MkdirAll(configDirPath, 0700)
 		if err != nil {
 			return err
 		}
-		defer file.Close()
-		fmt.Printf("Create file: %s\n", configFilePath)
+		fmt.Printf("Create Dir: %s\n", configDirPath)
 	}
 
 	// Check if the configuration file exists
@@ -40,7 +42,7 @@ func FirstTime() error {
 			fmt.Println("No action taken. You can manually set up your configuration later.")
 			createConfig(configFilePath)
 		} else {
-			err := downloadDefaultRegexFile(regexFilePath)
+			err := downloadRegex(regexFilePath, defaultRegexURL)
 			if err != nil {
 				return err
 			}
@@ -63,17 +65,35 @@ func expandHomeDir(path string) (string, error) {
 	return path, nil
 }
 
-func downloadDefaultRegexFile(destPath string) error {
-	// Replace the URL with the actual URL of your default regex file on GitHub
-	defaultRegexURL := "https://raw.githubusercontent.com/i5nipe/nipejs/master/files/regex.txt"
+func downloadRegex(destPath string, url string) error {
+	// Create or open the destination file
+	file, err := os.Create(destPath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
 
-	// Download the file
-	// Implement your logic to download the file from the URL and save it to destPath
-	// You can use libraries like "github.com/go-resty/resty" or standard library "net/http"
+	// Download the file from the URL and save it to the destination file
+	req, err := http.NewRequest("Get", url, nil)
+	if err != nil {
+		return err
+	}
 
-	// For simplicity, let's just print a message here
-	fmt.Printf("Downloading default regex file from: %s\n", defaultRegexURL)
+	req.Header.Set("Location", fmt.Sprintf("Nipejs %s", Version))
 
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	// Copy the content from the response to the destination file
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Downloaded default regex file from: %s\n", url)
 	return nil
 }
 
