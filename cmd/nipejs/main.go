@@ -35,10 +35,7 @@ var (
 	jsdir   = flag.String("d", "", "Directory to scan all the files")
 )
 
-var (
-	wg           sync.WaitGroup
-	waitForPrint sync.WaitGroup
-)
+var wg sync.WaitGroup
 
 type Results struct {
 	Resu  string
@@ -222,7 +219,6 @@ func Execute() {
 		curl <- input.Text()
 	}
 	wg.Wait()
-	waitForPrint.Wait() // A HotFix for the bug that the tool return but have not enogth time to print the final Output
 
 	// Ending program
 	close(results)
@@ -247,7 +243,7 @@ func matchRegex(target string, rlocation string, results chan Results) {
 			nurex := regexp.MustCompile(regex)
 			matches := nurex.FindAllString(target, -1)
 			for _, match := range matches {
-				waitForPrint.Add(1)
+				wg.Add(1)
 				results <- Results{match, rlocation, regex, len(target) / 5}
 			}
 		}(regexList.Text())
