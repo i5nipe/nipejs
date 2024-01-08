@@ -14,7 +14,7 @@ import (
 
 func (resp Results) printresu() {
 	fmt.Printf("\t%q\n", resp.Resu)
-	// defer wg.Done()
+	defer waitForPrint.Done()
 }
 
 func (resp Results) printdefault(ident string) {
