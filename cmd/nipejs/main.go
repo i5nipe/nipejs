@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/glenn-brown/golang-pkg-pcre/src/pkg/pcre"
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
@@ -233,7 +234,7 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 	regexList := bufio.NewScanner(regexsfile)
 	for regexList.Scan() {
 		func(regex string) {
-			nurex := regexp.MustCompile(regex)
+			nurex := pcre.MustCompile(regex)
 			matches := nurex.FindAllString(target, -1)
 			for _, match := range matches {
 				wg.Add(1)
