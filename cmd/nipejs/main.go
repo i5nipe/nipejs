@@ -234,9 +234,10 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 	regexList := bufio.NewScanner(regexsfile)
 	for regexList.Scan() {
 		func(regex string) {
-			nurex := pcre.MustCompile(regex)
-			matches := nurex.FindAllString(target, -1)
-			for _, match := range matches {
+			nurex, _ := pcre.Compile(regex, 0)
+			matchData := nurex.MatcherString(target, 0)
+			for matchData.Matches() {
+				match := matchData.GroupString(0)
 				wg.Add(1)
 				results <- Results{match, rlocation, regex, len(target) / 5}
 			}
