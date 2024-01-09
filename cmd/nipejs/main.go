@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/glenn-brown/golang-pkg-pcre/src/pkg/pcre"
+	"github.com/dlclark/regexp2"
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
@@ -234,12 +234,24 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 	regexList := bufio.NewScanner(regexsfile)
 	for regexList.Scan() {
 		func(regex string) {
-			nurex, _ := pcre.Compile(regex, 0)
-			matchData := nurex.MatcherString(target, 0)
-			for matchData.Matches() {
-				match := matchData.GroupString(0)
+			nurex, err := regexp2.Compile(regex, 0)
+			if err != nil {
+				log.Fatal().Msg("Error in matchRegex")
+			}
+			matcher, err := nurex.FindStringMatch(target)
+			if err != nil {
+				log.Fatal().Msg("Error in matchRegex")
+			}
+			for matcher != nil {
+				match := matcher.GroupByNumber(0).String()
+
 				wg.Add(1)
 				results <- Results{match, rlocation, regex, len(target) / 5}
+
+				matcher, err = nurex.FindNextMatch(matcher)
+				if err != nil {
+					log.Fatal().Msg("Error Finding the Next Match")
+				}
 			}
 		}(regexList.Text())
 	}
