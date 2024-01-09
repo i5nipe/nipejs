@@ -255,8 +255,19 @@ func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
 }
 
 func checkRegexs(file string) {
-	_, err := os.Open(file)
+	regexFile, err := os.Open(file)
 	if err != nil {
 		log.Fatal().Msg("Unable to open regex file")
+	}
+	defer regexFile.Close()
+	regexL := bufio.NewScanner(regexFile)
+	line := 1
+	for regexL.Scan() {
+		_, err := regexp.Compile(regexL.Text())
+		if err != nil {
+			log.Fatal().
+				Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(regexL.Text()).Bold())
+		}
+		line += 1
 	}
 }
