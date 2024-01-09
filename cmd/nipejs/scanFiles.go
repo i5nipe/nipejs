@@ -58,6 +58,8 @@ func scanFolder(tmpfilename string, foldername string) (io.Reader, int) {
 }
 
 func ReadFiles(results chan Results, files chan string) {
+	regexfile, _ := os.Open(*regexf)
+	defer regexfile.Close()
 	for file := range files {
 		jsprefile, err := os.Open(file)
 		if err != nil {
@@ -67,7 +69,7 @@ func ReadFiles(results chan Results, files chan string) {
 		}
 		jsfile, _ := io.ReadAll(jsprefile)
 
-		matchRegex(string(jsfile), file, results)
+		matchRegex(string(jsfile), file, results, regexfile)
 		jsprefile.Close()
 		wg.Done()
 	}

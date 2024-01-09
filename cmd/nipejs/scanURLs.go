@@ -8,6 +8,7 @@ import (
 )
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
+	regexfile, _ := os.Open(*regexf)
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseRequest(req)
@@ -21,7 +22,7 @@ func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
 
 		html := resp.Body()
 
-		matchRegex(string(html), url, results)
+		matchRegex(string(html), url, results, regexfile)
 
 		wg.Done()
 	}

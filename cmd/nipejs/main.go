@@ -84,11 +84,9 @@ func Execute() {
 		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
 	}
 	urlsFile, _ := os.Open(*urls)
-	_, err = os.Open(*regexf)
-	if err != nil {
-		fmt.Println("Unable to open regexps file")
-		return
-	}
+
+	checkRegexs(*regexf)
+
 	allRegex, _ := countLines(*regexf)
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
@@ -231,12 +229,7 @@ func Execute() {
 		Msgf("Nipejs done: %d files with %d regex patterns scanned in %.2f seconds", Magenta(totalScan).Bold(), Cyan(allRegex).Bold(), Red(executionTime).Bold())
 }
 
-func matchRegex(target string, rlocation string, results chan Results) {
-	regexsfile, err := os.Open(*regexf)
-	if err != nil {
-		log.Fatal().Msgf("%v", err)
-	}
-
+func matchRegex(target string, rlocation string, results chan Results, regexsfile io.Reader) {
 	regexList := bufio.NewScanner(regexsfile)
 	for regexList.Scan() {
 		func(regex string) {
@@ -259,4 +252,11 @@ func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
 	duration := endTime.Sub(startTime)
 
 	return duration.Seconds()
+}
+
+func checkRegexs(file string) {
+	_, err := os.Open(file)
+	if err != nil {
+		log.Fatal().Msg("Unable to open regex file")
+	}
 }
