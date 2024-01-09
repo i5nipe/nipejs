@@ -31,6 +31,7 @@ nipejs -d dir/ -r regex.txt
 
 ## Credits
 
+- [Elara](https://gitea.elara.ws/Elara6331/pcre)
 - [KeyHacks](https://github.com/streaak/keyhacks)
 - [JSScanner](https://github.com/0x240x23elu/JSScanner)
 - [ProjectDiscovery/gologger](https://github.com/projectdiscovery/gologger)

@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"os"
 	"os/user"
-	"regexp"
 	"sync"
 	"time"
 
@@ -86,13 +85,15 @@ func Execute() {
 	}
 	urlsFile, _ := os.Open(*urls)
 
-	// checkRegexs(*regexf)
-
+	checkRegexs(*regexf)
 	allRegex, _ := countLines(*regexf)
+
 	results := make(chan Results, *threads)
 	curl := make(chan string, *threads)
+
 	var input *bufio.Scanner
 	var thread, countFiles, totalScan int
+
 	StartTimestamp := time.Now().UnixNano()
 	tmpFilename := fmt.Sprintf("/tmp/nipejs_%d%d", StartTimestamp, rand.Intn(100))
 
@@ -265,7 +266,7 @@ func checkRegexs(file string) {
 	regexL := bufio.NewScanner(regexFile)
 	line := 1
 	for regexL.Scan() {
-		_, err := regexp.Compile(regexL.Text())
+		_, err := pcre.Compile(regexL.Text())
 		if err != nil {
 			log.Fatal().
 				Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(regexL.Text()).Bold())
