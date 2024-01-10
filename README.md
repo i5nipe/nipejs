@@ -2,7 +2,7 @@
 
 ## ☕ Overview
 
-NipeJS is a powerful and user-friendly tool designed to automate the process of detecting JavaScript leaks through precise regex pattern scanning. Whether you're securing web applications or conducting security assessments, NipeJS streamlines the identification of potential data leaks within JavaScript code.
+NipeJS is a powerful tool designed to detect JavaScript leaks through precise regex pattern scanning, streamlining the identification of potential data leaks within code.
 
 <img src="./files/NipeJS.jpeg" alt="alt text" width="550"/>
 
