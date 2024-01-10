@@ -38,10 +38,10 @@ var (
 var wg sync.WaitGroup
 
 type Results struct {
-	Resu  string
-	Url   string
-	Regex string
-	KB    float64
+	Resu          string
+	Url           string
+	Regex         string
+	ContentLength float64
 }
 
 func init() {

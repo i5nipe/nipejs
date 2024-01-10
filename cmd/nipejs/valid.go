@@ -13,8 +13,14 @@ import (
 )
 
 func (resp Results) printDefault(ident string) {
-	fmt.Printf("\n%s %s %s%s%s\n", Cyan("[*]").Bold(),
-		Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.KB), Cyan("]"))
+	// If the ContentLength Is Lower than 5KB the output will be in bytes
+	if resp.ContentLength < 5.0 {
+		fmt.Printf("\n%s %s %s%s B%s\n", Cyan("[*]").Bold(),
+			Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength*1024), Cyan("]"))
+	} else {
+		fmt.Printf("\n%s %s %s%s KB%s\n", Cyan("[*]").Bold(),
+			Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength), Cyan("]"))
+	}
 	fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(ident))))
 	fmt.Printf("\t%q\n", resp.Resu)
 	defer wg.Done()
