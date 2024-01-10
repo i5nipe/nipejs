@@ -26,23 +26,24 @@ var (
 		"Mozilla/5.0 (Windows NT 12.0; rv:88.0) Gecko/20100101 Firefox/88.0",
 		"User-Agent",
 	)
-	silent  = flag.Bool("s", false, "Silent Mode")
-	threads = flag.Int("c", 50, "Set the concurrency level")
-	urls    = flag.String("u", "", "List of URLs to scan")
-	debug   = flag.Bool("b", false, "Debug mode")
-	timeout = flag.Int("timeout", 10, "Timeout in seconds")
-	version = flag.Bool("version", false, "Prints version information")
-	jsdir   = flag.String("d", "", "Directory to scan all the files")
-	Scan    = flag.Bool("no-scan", false, "Disable all scans for Special Regexs")
+	silent     = flag.Bool("s", false, "Silent Mode")
+	threads    = flag.Int("c", 50, "Set the concurrency level")
+	urls       = flag.String("u", "", "List of URLs to scan")
+	debug      = flag.Bool("b", false, "Debug mode")
+	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
+	version    = flag.Bool("version", false, "Prints version information")
+	jsdir      = flag.String("d", "", "Directory to scan all the files")
+	Scan       = flag.Bool("no-scan", false, "Disable all scans for Special Regexs")
+	jsonOutput = flag.Bool("json", false, "Enable json output")
 )
 
 var wg sync.WaitGroup
 
 type Results struct {
-	Resu          string
-	Url           string
-	Regex         string
-	ContentLength float64
+	Match         string  `json:"Match"`
+	Url           string  `json:"Url"`
+	Regex         string  `json:"Regex"`
+	ContentLength float64 `json:"ContentLength"`
 }
 
 func init() {

@@ -1,0 +1,6 @@
+{"Match":"eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJwYXNzMTMyIn0K","Url":"files/testes/jsdir/base1.js","Regex":"(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}","ContentLength":0.1484375}
+{"Match":"eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJzZWNyZXQxMjMifQo=","Url":"files/testes/jsdir/base1.js","Regex":"(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}","ContentLength":0.1484375}
+{"Match":"eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJwYXNzMTMyIn0K","Url":"files/testes/jsdir/NOTaJSfile.txt","Regex":"(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}","ContentLength":0.1484375}
+{"Match":"eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJzZWNyZXQxMjMifQo=","Url":"files/testes/jsdir/NOTaJSfile.txt","Regex":"(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}","ContentLength":0.1484375}
+{"Match":"\u003ch1\u003eIndex of /\u003c/h1\u003e","Url":"files/testes/jsdir/base2.js","Regex":"\u003ch1\u003eIndex of (.*?)\u003c/h1\u003e","ContentLength":1.72265625}
+

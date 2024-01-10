@@ -2,8 +2,11 @@ package nipejs
 
 import (
 	b64 "encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"math"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -14,7 +17,7 @@ import (
 
 func (resp Results) printSpecific(category string) {
 	resp.printDefault(category)
-	if !*Scan {
+	if !*Scan && !*jsonOutput {
 		switch category {
 		case "Google Recaptcha":
 			resp.printrecaptcha()
@@ -27,21 +30,30 @@ func (resp Results) printSpecific(category string) {
 }
 
 func (resp Results) printDefault(ident string) {
-	// If the ContentLength Is Lower than 5KB the output will be in bytes
-	if resp.ContentLength < 5.0 {
-		fmt.Printf("\n%s %s %s%s B%s\n", Cyan("[*]").Bold(),
-			Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength*1024), Cyan("]"))
+	if *jsonOutput {
+		resp.ContentLength = math.Round(resp.ContentLength*100) / 100
+		jsonData, err := json.Marshal(resp)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(jsonData))
 	} else {
-		fmt.Printf("\n%s %s %s%s KB%s\n", Cyan("[*]").Bold(),
-			Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength), Cyan("]"))
+		// If the ContentLength Is Lower than 5KB the output will be in bytes
+		if resp.ContentLength < 5.0 {
+			fmt.Printf("\n%s %s %s%s B%s\n", Cyan("[*]").Bold(),
+				Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength*1024), Cyan("]"))
+		} else {
+			fmt.Printf("\n%s %s %s%s KB%s\n", Cyan("[*]").Bold(),
+				Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength), Cyan("]"))
+		}
+		fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(ident))))
+		fmt.Printf("\t%q\n", resp.Match)
 	}
-	fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(ident))))
-	fmt.Printf("\t%q\n", resp.Resu)
 	defer wg.Done()
 }
 
 func (resp Results) printb64() {
-	sDec, _ := b64.StdEncoding.DecodeString(resp.Resu)
+	sDec, _ := b64.StdEncoding.DecodeString(resp.Match)
 	fmt.Printf("\t%s\n", Green(string(sDec)))
 }
 
@@ -51,7 +63,7 @@ func (resp Results) printheruko() {
 		return
 	}
 	req.Header.Set("Accept", "application/vnd.heroku+json; version=3")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", resp.Resu))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", resp.Match))
 
 	re, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -78,7 +90,7 @@ func (resp Results) printmailgun() {
 	if err != nil {
 		return
 	}
-	req.SetBasicAuth("api", resp.Resu)
+	req.SetBasicAuth("api", resp.Match)
 
 	re, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -102,7 +114,7 @@ func (resp Results) printmailgun() {
 
 func (resp Results) printrecaptcha() {
 	params := url.Values{}
-	params.Add("secret", resp.Resu)
+	params.Add("secret", resp.Match)
 	params.Add("response", `test`)
 	body := strings.NewReader(params.Encode())
 
