@@ -17,7 +17,7 @@ func (resp Results) printresu() {
 	defer wg.Done()
 }
 
-func (resp Results) printdefault(ident string) {
+func (resp Results) printDefault(ident string) {
 	fmt.Printf("\n%s %s %s%d%s\n", Cyan("[*]").Bold(),
 		Magenta(resp.Url).Bold(), Cyan("["), resp.Len, Cyan("]"))
 
