@@ -12,6 +12,20 @@ import (
 	. "github.com/logrusorgru/aurora/v3"
 )
 
+func (resp Results) printSpecific(category string) {
+	resp.printDefault(category)
+	if !*Scan {
+		switch category {
+		case "Google Recaptcha":
+			resp.printrecaptcha()
+		case "Mailgun":
+			resp.printmailgun()
+		case "Base64":
+			resp.printb64()
+		}
+	}
+}
+
 func (resp Results) printDefault(ident string) {
 	// If the ContentLength Is Lower than 5KB the output will be in bytes
 	if resp.ContentLength < 5.0 {
