@@ -15,7 +15,7 @@ import (
 )
 
 func FirstTime() error {
-	configFilePath := "~/.config/nipejs/.config"
+	configFilePath := "~/.config/nipejs/.FirstRun"
 	configDirPath := "~/.config/nipejs"
 	regexFilePath := "~/.config/nipejs/regex.txt"
 	defaultRegexURL := "https://raw.githubusercontent.com/i5nipe/nipejs/master/files/regex.txt"
