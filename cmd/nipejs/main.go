@@ -166,31 +166,22 @@ func Execute() {
 			switch resp.Regex {
 			case `AAAA[A-Za-z0-9_-]{7}:[A-Za-z0-9_-]{140}`:
 				resp.printDefault("Firebase")
-				resp.printresu()
 			case `sq0csp-[ 0-9A-Za-z\-_]{43}|sq0[a-z]{3}-[0-9A-Za-z\-_]{22,43}`:
 				resp.printDefault("Square oauth secret")
-				resp.printresu()
 			case `sqOatp-[0-9A-Za-z\-_]{22}|EAAA[a-zA-Z0-9]{60}`:
 				resp.printDefault("Square access token")
-				resp.printresu()
 			case `AC[a-zA-Z0-9_\-]{32}`:
 				resp.printDefault("Twilio account SID")
-				resp.printresu()
 			case `AP[a-zA-Z0-9_\-]{32}`:
 				resp.printDefault("Twilio APP SID")
-				resp.printresu()
 			case `[A-Za-z0-9]{125}`:
 				resp.printDefault("Facebook")
-				resp.printresu()
 			case `s3\.amazonaws.com[/]+|[a-zA-Z0-9_-]*\.s3\.amazonaws.com`:
 				resp.printDefault("S3 bucket")
-				resp.printresu()
 			case `\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}\b`:
 				resp.printDefault("IPv4")
-				resp.printresu()
 			case `[a-f0-9]{32}`:
 				resp.printDefault("MD5 hash")
-				resp.printresu()
 			case `6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}`:
 				resp.printDefault("Google Recaptcha")
 				resp.printrecaptcha()
@@ -200,7 +191,6 @@ func Execute() {
 			case `[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}`,
 				`[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`:
 				resp.printDefault("UUID")
-				resp.printresu()
 			case `(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}`:
 				resp.printDefault("Base64")
 				resp.printb64()
@@ -208,7 +198,6 @@ func Execute() {
 				break
 			default:
 				resp.printDefault("")
-				resp.printresu()
 			}
 		}
 	}()
