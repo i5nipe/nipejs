@@ -4,9 +4,15 @@
 
 NipeJS is a powerful and user-friendly tool designed to automate the process of detecting JavaScript leaks through precise regex pattern scanning. Whether you're securing web applications or conducting security assessments, NipeJS streamlines the identification of potential data leaks within JavaScript code.
 
-
-> Read a list of JS files and look for sensitive data via regex.
 <img src="./files/NipeJS.jpeg" alt="alt text" width="550"/>
+
+## Key Features
+- **Automated Leak Detection:** NipeJS simplifies the identification of JavaScript leaks by employing regex patterns, allowing users to efficiently scan large codebases for sensitive information.
+- **Concurrent Scanning:** Utilize concurrent scanning capabilities with customizable concurrency levels, enabling fast and efficient processing of multiple URLs or files simultaneously.
+- **Regex Pattern Validation:** Ensure the accuracy of your regex patterns with built-in validation, preventing invalid patterns from impacting the scanning process.
+- **Special Regexs for API Keys:** NipeJS includes special regex patterns for automatic validation of API keys, streamlining the identification of valid or potentially leaked keys.
+- **Base64 Decryption Patterns:** The tool features regex patterns for automatically decrypting Base64-encoded strings, aiding in the discovery of hidden information within encoded data.
+
 
 ## ☕ Installation
 ```bash
@@ -18,18 +24,14 @@ NipeJS supports various input methods, including reading from standard input, sc
 
 ## ☕ Example Commands
 
-Scan URLs from STDIN: `cat UrlsList | nipejs`
-
-Scan URLs from a file: `nipejs -u urlList.txt`
-
-Analyze JavaScript files in a directory: `nipejs -d /path/to/js/files`
-
-Analyze JavaScript file: `nipejs -d /path/to/js/files.js`
-
-Specify a custom regex file: `nipejs -r regex.txt -d file.js`
+- Scan URLs from STDIN: `cat UrlsList | nipejs`
+- Scan URLs from a file: `nipejs -u urlList.txt`
+- Analyze JavaScript files in a directory: `nipejs -d /path/to/js/files`
+- Analyze JavaScript file: `nipejs -d /path/to/js/files.js`
+- Specify a custom regex file: `nipejs -r regex.txt -d file.js`
 
 ## Contributing
-Contributions to NipeJS are welcome! If you have suggestions, feature requests, or bug reports, please open an issue on GitHub.
+Contributions to NipeJS are welcome! If you have suggestions, feature requests, or bug reports, please [open an issue on GitHub](https://github.com/i5nipe/nipejs/issues).
 
 ## Acknowledgments
 
