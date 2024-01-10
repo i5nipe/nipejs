@@ -1,35 +1,37 @@
-# NipeJS
+# NipeJS: Automated Regex Pattern Scanning for JavaScript Leaks
+
+## Overview
+
+NipeJS is a powerful and user-friendly tool designed to automate the process of detecting JavaScript leaks through precise regex pattern scanning. Whether you're securing web applications or conducting security assessments, NipeJS streamlines the identification of potential data leaks within JavaScript code.
+
 
 > Read a list of JS files and look for sensitive data via regex.
 <img src="./files/NipeJS.jpeg" alt="alt text" width="550"/>
 
-## ☕ Install
+## ☕ Installation
 ```bash
 go install github.com/i5nipe/nipejs@latest
 ```
 
-## ☕ Regular expressions
-> Download the file "[files/regex.txt](https://github.com/i5nipe/nipejs/blob/master/files/regex.txt)"
+## ☕ Usage
+NipeJS supports various input methods, including reading from standard input, scanning URLs from a file, or analyzing JavaScript files within a specified directory. The tool's flexibility makes it suitable for diverse scenarios, from one-time scans to automated security workflows.
 
-- You don't need to specify the regex file if you put it in `~/.config/nipejs/regex.txt`.
+## ☕ Example Commands
 
-- This tool has some special regex with special actions, e.g. decrypt base64 strings.
+Scan URLs from STDIN: `cat UrlsList | nipejs`
 
-- Automatically test the authenticity of some API keys 
+Scan URLs from a file: `nipejs -u urlList.txt`
 
-## ☕ Usage examples
+Analyze JavaScript files in a directory: `nipejs -d /path/to/js/files`
 
-```bash
-cat jsUrlsList | nipejs -r regex.txt
+Analyze JavaScript file: `nipejs -d /path/to/js/files.js`
 
-nipejs -u jsfile -r regex.txt
+Specify a custom regex file: `nipejs -r regex.txt -d file.js`
 
-nipejs -u ~/Path/to/jsfile -s -r regex.txt
+## Contributing
+Contributions to NipeJS are welcome! If you have suggestions, feature requests, or bug reports, please open an issue on GitHub.
 
-nipejs -d dir/ -r regex.txt
-```
-
-## Credits
+## Acknowledgments
 
 - [Elara](https://gitea.elara.ws/Elara6331/pcre)
 - [KeyHacks](https://github.com/streaak/keyhacks)
