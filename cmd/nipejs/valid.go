@@ -13,8 +13,8 @@ import (
 )
 
 func (resp Results) printDefault(ident string) {
-	fmt.Printf("\n%s %s %s%d%s\n", Cyan("[*]").Bold(),
-		Magenta(resp.Url).Bold(), Cyan("["), resp.Len, Cyan("]"))
+	fmt.Printf("\n%s %s %s%s%s\n", Cyan("[*]").Bold(),
+		Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.KB), Cyan("]"))
 	fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(ident))))
 	fmt.Printf("\t%q\n", resp.Resu)
 	defer wg.Done()

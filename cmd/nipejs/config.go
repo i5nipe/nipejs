@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strconv"
 
 	. "github.com/logrusorgru/aurora/v3"
 	log "github.com/projectdiscovery/gologger"
@@ -110,4 +111,19 @@ func createConfig(configFilePath string) {
 		}
 		defer file.Close()
 	}
+}
+
+func formatWithDots(value float64) string {
+	// Convert the float to an integer
+	intValue := int(value)
+
+	// Convert the integer to a string
+	strValue := strconv.Itoa(intValue)
+
+	// Insert dots for every three digits from the end
+	for i := len(strValue) - 3; i > 0; i -= 3 {
+		strValue = strValue[:i] + "." + strValue[i:]
+	}
+
+	return strValue
 }
