@@ -29,7 +29,7 @@ func (resp Results) printSpecific(category string) {
 	}
 }
 
-func (resp Results) printDefault(ident string) {
+func (resp Results) printDefault(category string) {
 	if *jsonOutput {
 		resp.ContentLength = math.Round(resp.ContentLength*100) / 100
 		jsonData, err := json.Marshal(resp)
@@ -46,7 +46,7 @@ func (resp Results) printDefault(ident string) {
 			fmt.Printf("\n%s %s %s%s KB%s\n", Cyan("[*]").Bold(),
 				Magenta(resp.Url).Bold(), Cyan("["), formatWithDots(resp.ContentLength), Cyan("]"))
 		}
-		fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(ident))))
+		fmt.Printf("%v\n", Cyan(fmt.Sprintf("Regex:  %s  %s", resp.Regex, Green(category))))
 		fmt.Printf("\t%q\n", resp.Match)
 	}
 	defer wg.Done()

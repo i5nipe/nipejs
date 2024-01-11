@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"os/user"
+	"strings"
 	"sync"
 	"time"
 
@@ -43,6 +44,7 @@ type Results struct {
 	Match         string  `json:"Match"`
 	Url           string  `json:"Url"`
 	Regex         string  `json:"Regex"`
+	Category      string  `json:"Category"`
 	ContentLength float64 `json:"ContentLength"`
 }
 
@@ -206,6 +208,9 @@ func Execute() {
 			case `(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}`:
 				resp.printSpecific("Base64")
 
+			case `<h1>Index of (.*?)</h1>`:
+				resp.printDefault("Index page")
+
 			case "":
 				break
 
@@ -236,15 +241,24 @@ func Execute() {
 func matchRegex(target string, rlocation string, results chan Results, regexsfile io.Reader) {
 	regexList := bufio.NewScanner(regexsfile)
 	for regexList.Scan() {
-		func(regex string) {
-			nurex := pcre.MustCompile(regex)
+		lineText := regexList.Text()
+		lineText = strings.TrimSpace(lineText)
+		if lineText == "" {
+			continue
+		}
+		parts := strings.Split(lineText, "\t\t")
+		regex := parts[0]
+		category := ""
+		if len(parts) > 1 {
+			category = strings.Join(parts[1:], "\t\t")
+		}
+		nurex := pcre.MustCompile(regex)
 
-			matches := nurex.FindAllString(target, -1)
-			for _, match := range matches {
-				wg.Add(1)
-				results <- Results{match, rlocation, regex, float64(len(target)) / 1024}
-			}
-		}(regexList.Text())
+		matches := nurex.FindAllString(target, -1)
+		for _, match := range matches {
+			wg.Add(1)
+			results <- Results{match, rlocation, regex, category, float64(len(target)) / 1024}
+		}
 	}
 }
 
@@ -260,17 +274,76 @@ func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
 func checkRegexs(file string) {
 	regexFile, err := os.Open(file)
 	if err != nil {
-		log.Fatal().Msg("Unable to open regex file")
+		log.Fatal().Msgf("Unable to open regex file: %v", err)
 	}
 	defer regexFile.Close()
+
+	regexCategories := make(map[string]string)
 	regexL := bufio.NewScanner(regexFile)
 	line := 1
 	for regexL.Scan() {
-		_, err := pcre.Compile(regexL.Text())
+		lineText := regexL.Text()
+		lineText = strings.TrimSpace(lineText)
+		if lineText == "" {
+			continue
+		}
+
+		parts := strings.Split(lineText, "\t\t")
+		regex := parts[0]
+		category := ""
+		if len(parts) > 1 {
+			category = strings.Join(parts[1:], "\t\t")
+		}
+
+		_, err := pcre.Compile(regex)
 		if err != nil {
 			log.Fatal().
-				Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(regexL.Text()).Bold())
+				Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(lineText).Bold())
 		}
-		line += 1
+
+		regexCategories[regex] = category
+		line++
+	}
+
+	if err := regexL.Err(); err != nil {
+		log.Fatal().Msgf("Error reading regex file: %v", err)
+	}
+	for regexs, categories := range regexCategories {
+		log.Debug().Msgf("Regex: %v,Category: %v", regexs, categories)
 	}
 }
+
+/*
+func checkRegexs(file string) {
+	regexFile, err := os.Open(file)
+	if err != nil {
+		log.Fatal().Msg("Unable to open regex file")
+	}
+	defer regexFile.Close()
+
+	regexCategories := make(map[string]string)
+	regexL := bufio.NewScanner(regexFile)
+	line := 1
+	for regexL.Scan() {
+		lineText := regexL.Text()
+		parts := strings.SplitN(lineText, "\t", 2)
+
+		if len(parts) > 0 {
+			regex := parts[0]
+			category := parts[1]
+			if len(parts) > 1 {
+				category = parts[1]
+			}
+			_, err := pcre.Compile(regex)
+			if err != nil {
+				log.Fatal().
+					Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(regexL.Text()).Bold())
+			}
+			regexCategories[regex] = category
+		}
+
+		line += 1
+	}
+	log.Debug().Msgf("%v", regexCategories)
+}
+*/
