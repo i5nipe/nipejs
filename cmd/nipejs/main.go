@@ -167,55 +167,24 @@ func Execute() {
 	go func() {
 		for {
 			resp := <-results
-			switch resp.Regex {
-			case `AAAA[A-Za-z0-9_-]{7}:[A-Za-z0-9_-]{140}`:
-				resp.printDefault("Firebase")
-
-			case `sq0csp-[ 0-9A-Za-z\-_]{43}|sq0[a-z]{3}-[0-9A-Za-z\-_]{22,43}`:
-				resp.printDefault("Square oauth secret")
-
-			case `sqOatp-[0-9A-Za-z\-_]{22}|EAAA[a-zA-Z0-9]{60}`:
-				resp.printDefault("Square access token")
-
-			case `AC[a-zA-Z0-9_\-]{32}`:
-				resp.printDefault("Twilio account SID")
-
-			case `AP[a-zA-Z0-9_\-]{32}`:
-				resp.printDefault("Twilio APP SID")
-
-			case `[A-Za-z0-9]{125}`:
-				resp.printDefault("Facebook")
-
-			case `s3\.amazonaws.com[/]+|[a-zA-Z0-9_-]*\.s3\.amazonaws.com`:
-				resp.printDefault("S3 bucket")
-
-			case `\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}\b`:
-				resp.printDefault("IPv4")
-
-			case `[a-f0-9]{32}`:
-				resp.printDefault("MD5 hash")
-
-			case `6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}`:
+			switch resp.Category {
+			case "Google Recaptcha":
 				resp.printSpecific("Google Recaptcha")
 
-			case `key-[0-9a-zA-Z]{32}`:
+			case "Mailgun":
 				resp.printSpecific("Mailgun")
 
-			case `[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}`,
-				`[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`:
-				resp.printDefault("UUID")
-
-			case `(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[a-zA-Z0-9+/]+={0,2}`:
+			case "base64":
 				resp.printSpecific("Base64")
 
-			case `<h1>Index of (.*?)</h1>`:
-				resp.printDefault("Index page")
+			case "empty":
+				resp.printDefault("")
 
 			case "":
 				break
 
 			default:
-				resp.printDefault("")
+				resp.printDefault(resp.Category)
 			}
 		}
 	}()
@@ -257,6 +226,9 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 		matches := nurex.FindAllString(target, -1)
 		for _, match := range matches {
 			wg.Add(1)
+			if category == "" {
+				category = "empty"
+			}
 			results <- Results{match, rlocation, regex, category, float64(len(target)) / 1024}
 		}
 	}
