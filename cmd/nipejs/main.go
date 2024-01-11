@@ -174,7 +174,7 @@ func Execute() {
 			case "Mailgun":
 				resp.printSpecific("Mailgun")
 
-			case "base64":
+			case "Base64":
 				resp.printSpecific("Base64")
 
 			case "empty":
