@@ -1,0 +1,3 @@
+<h1>Index of (.*?)</h1>			IndexOf
+6L[0-9A-Za-z-_]{38}|^6[0-9a-zA-Z_-]{39}		Google Recaptcha
+

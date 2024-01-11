@@ -226,6 +226,7 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 		matches := nurex.FindAllString(target, -1)
 		for _, match := range matches {
 			wg.Add(1)
+			category = strings.TrimSpace(category)
 			if category == "" {
 				category = "empty"
 			}
@@ -273,7 +274,7 @@ func checkRegexs(file string) {
 				Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(lineText).Bold())
 		}
 
-		regexCategories[regex] = category
+		regexCategories[regex] = strings.TrimSpace(category)
 		line++
 	}
 
@@ -284,38 +285,3 @@ func checkRegexs(file string) {
 		log.Debug().Msgf("Regex: %v,Category: %v", regexs, categories)
 	}
 }
-
-/*
-func checkRegexs(file string) {
-	regexFile, err := os.Open(file)
-	if err != nil {
-		log.Fatal().Msg("Unable to open regex file")
-	}
-	defer regexFile.Close()
-
-	regexCategories := make(map[string]string)
-	regexL := bufio.NewScanner(regexFile)
-	line := 1
-	for regexL.Scan() {
-		lineText := regexL.Text()
-		parts := strings.SplitN(lineText, "\t", 2)
-
-		if len(parts) > 0 {
-			regex := parts[0]
-			category := parts[1]
-			if len(parts) > 1 {
-				category = parts[1]
-			}
-			_, err := pcre.Compile(regex)
-			if err != nil {
-				log.Fatal().
-					Msgf("Regex on line %d not valid: %v", Cyan(line).Bold(), Red(regexL.Text()).Bold())
-			}
-			regexCategories[regex] = category
-		}
-
-		line += 1
-	}
-	log.Debug().Msgf("%v", regexCategories)
-}
-*/
