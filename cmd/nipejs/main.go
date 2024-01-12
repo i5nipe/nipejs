@@ -31,7 +31,7 @@ var (
 	silent     = flag.Bool("s", false, "Silent Mode")
 	threads    = flag.Int("c", 50, "Set the concurrency level")
 	urls       = flag.String("u", "", "List of URLs to scan")
-	debug      = flag.Bool("b", false, "Debug mode")
+	debug      = flag.Bool("v", false, "Verbose mode")
 	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
 	version    = flag.Bool("version", false, "Prints version information")
 	jsdir      = flag.String("d", "", "Directory to scan all the files")

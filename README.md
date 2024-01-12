@@ -9,9 +9,13 @@ NipeJS is a powerful tool designed to detect JavaScript leaks through precise re
 ## ☕ Key Features
 - 💡 **Automated Leak Detection:** Efficiently scan large codebases for sensitive information.
 - ⚡ **Concurrent Scanning:** Process multiple URLs or files simultaneously for faster results.
-- 🔍 **Regex Pattern Validation:** Ensure pattern accuracy with built-in validation.
 - 🌟 **Special Regexs for API Keys:** Automatically validate API keys for added convenience.
 - 🔓 **Base64 Decryption Patterns:** Decrypt Base64-encoded strings to uncover hidden information.
+- 🏷️ **Custom Regex Categories:** Dynamically categorize leaks by associating each regex with a custom category in the regex file.
+
+## ☕ Additional Information
+- **Editing Regexs File:** When adding a category to a regex, insert it after 2 tabs (`\t\t`). Be cautious, as some text editors may replace tabs with spaces.
+
 
 ## ☕ Installation
 ```bash
