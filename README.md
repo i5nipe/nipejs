@@ -22,9 +22,6 @@ NipeJS is a powerful tool designed to detect JavaScript leaks through precise re
 go install github.com/i5nipe/nipejs@latest
 ```
 
-## ☕ Usage
-NipeJS supports various input methods, making it suitable for diverse scenarios, from one-time scans to automated security workflows.
-
 ## ☕ Example Commands
 
 - Scan URLs from STDIN: `cat UrlsList | nipejs`
