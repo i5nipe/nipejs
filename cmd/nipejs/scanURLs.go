@@ -2,13 +2,14 @@ package nipejs
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
 
 	"github.com/valyala/fasthttp"
 )
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-	regexfile, _ := os.Open(*regexf)
+	regexfile, _ := ioutil.ReadFile(*regexf)
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseRequest(req)

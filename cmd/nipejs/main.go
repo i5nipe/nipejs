@@ -2,6 +2,7 @@ package nipejs
 
 import (
 	"bufio"
+	"bytes"
 	"crypto/tls"
 	"flag"
 	"fmt"
@@ -207,9 +208,11 @@ func Execute() {
 		Msgf("Nipejs done: %d files with %d regex patterns scanned in %.2f seconds", Magenta(totalScan).Bold(), Cyan(allRegex).Bold(), Red(executionTime).Bold())
 }
 
-func matchRegex(target string, rlocation string, results chan Results, regexsfile io.Reader) {
-	regexList := bufio.NewScanner(regexsfile)
+func matchRegex(target string, rlocation string, results chan Results, regexsfile []byte) {
+	log.Debug().Msgf("matchRegex RECEVEID:\nfile: %v\n\n", rlocation)
+	regexList := bufio.NewScanner(bytes.NewReader(regexsfile))
 	for regexList.Scan() {
+		log.Debug().Msg("Inside the scanner")
 		lineText := regexList.Text()
 		lineText = strings.TrimSpace(lineText)
 		if lineText == "" {
@@ -233,6 +236,7 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 			results <- Results{match, rlocation, regex, category, float64(len(target)) / 1024}
 		}
 	}
+	log.Debug().Msg("runned all regexs")
 }
 
 func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
