@@ -129,7 +129,6 @@ func Execute() {
 
 		// If the input is for file or folder (-d)
 	case *jsdir != "" && *urls == "":
-		log.Debug().Msg(*jsdir)
 		fileInfo, err := os.Stat(*jsdir)
 		if err != nil {
 			log.Fatal().Msg("Could not open Directory")
@@ -209,10 +208,8 @@ func Execute() {
 }
 
 func matchRegex(target string, rlocation string, results chan Results, regexsfile []byte) {
-	log.Debug().Msgf("matchRegex RECEVEID:\nfile: %v\n\n", rlocation)
 	regexList := bufio.NewScanner(bytes.NewReader(regexsfile))
 	for regexList.Scan() {
-		log.Debug().Msg("Inside the scanner")
 		lineText := regexList.Text()
 		lineText = strings.TrimSpace(lineText)
 		if lineText == "" {
@@ -236,7 +233,6 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 			results <- Results{match, rlocation, regex, category, float64(len(target)) / 1024}
 		}
 	}
-	log.Debug().Msg("runned all regexs")
 }
 
 func calculateSeconds(startTimestamp, endTimestamp int64) float64 {
@@ -286,6 +282,10 @@ func checkRegexs(file string) {
 		log.Fatal().Msgf("Error reading regex file: %v", err)
 	}
 	for regexs, categories := range regexCategories {
-		log.Debug().Msgf("Regex: %v,Category: %v", regexs, categories)
+		if categories == "" {
+			log.Debug().Msgf("Regex: %v\n      Category: %v", Cyan(regexs), categories)
+		} else {
+			log.Debug().Msgf("Regex: %v\n      Category: %v", Cyan(regexs), Green(categories))
+		}
 	}
 }
