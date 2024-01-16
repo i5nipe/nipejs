@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	. "github.com/logrusorgru/aurora/v3"
+	. "github.com/logrusorgru/aurora/v4"
 )
 
 func (resp Results) printSpecific(category string) {

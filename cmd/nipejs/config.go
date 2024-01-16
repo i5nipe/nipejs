@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	. "github.com/logrusorgru/aurora/v3"
+	. "github.com/logrusorgru/aurora/v4"
 	log "github.com/projectdiscovery/gologger"
 )
 

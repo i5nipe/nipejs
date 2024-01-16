@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	. "github.com/logrusorgru/aurora/v3"
+	. "github.com/logrusorgru/aurora/v4"
 	log "github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
 	"github.com/valyala/fasthttp"
