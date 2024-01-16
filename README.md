@@ -21,6 +21,11 @@ NipeJS is a powerful tool designed to detect JavaScript leaks through precise re
 ```bash
 go install github.com/i5nipe/nipejs@latest
 ```
+The binary will be installed in the default Go binary directory. Ensure that this directory is included in your system's PATH variable to execute the nipejs command from any location in the terminal.
+
+```bash
+export PATH=$PATH:$(go env GOPATH)/bin
+```
 
 ## ☕ Example Commands
 
