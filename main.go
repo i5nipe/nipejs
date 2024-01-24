@@ -1,6 +1,6 @@
 package main
 
-import "github.com/i5nipe/nipejs/v2/cmd/nipejs"
+import "github.com/i5nipe/nipejs/cmd/nipejs"
 
 func main() {
 	nipejs.Execute()
