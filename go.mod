@@ -1,4 +1,4 @@
-module github.com/i5nipe/nipejs
+module github.com/i5nipe/nipejs/v2
 
 go 1.21.6
 
