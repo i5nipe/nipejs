@@ -17,7 +17,7 @@ const banner = ` ███▄    █  ██▓ ██▓███  ▓███
 `
 
 // Version is the current version
-const Version = `v2.0.2`
+const Version = `v2.0.3`
 
 // showBanner is used to show the banner to the user
 func Banner() {

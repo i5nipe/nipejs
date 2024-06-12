@@ -226,7 +226,7 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 		matches := nurex.FindAllStringSubmatch(target, -1)
 		for _, match := range matches {
 			for _, unique_match := range match {
-				wg.Add(1)
+			  wg.Add(1)
 
 				category = strings.TrimSpace(category)
 				if category == "" {
