@@ -34,7 +34,7 @@ var (
 	debug      = flag.Bool("v", false, "Verbose mode")
 	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
 	version    = flag.Bool("version", false, "Prints version information")
-	jsdir      = flag.String("d", "", "Directory to scan all the files")
+	jsdir      = flag.String("d", "", "Directory or File to match Regexs")
 	Scan       = flag.Bool("no-scan", false, "Disable all scans for Special Regexs")
 	jsonOutput = flag.Bool("json", false, "Enable json output")
 )
