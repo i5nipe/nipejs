@@ -223,14 +223,17 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 		}
 		nurex := pcre.MustCompile(regex)
 
-		matches := nurex.FindAllString(target, -1)
+		matches := nurex.FindAllStringSubmatch(target, -1)
 		for _, match := range matches {
 			wg.Add(1)
+      for _, unique_match := range match {
+
 			category = strings.TrimSpace(category)
 			if category == "" {
 				category = "empty"
 			}
-			results <- Results{match, rlocation, regex, category, float64(len(target)) / 1024}
+			results <- Results{unique_match, rlocation, regex, category, float64(len(target)) / 1024}
+      }
 		}
 	}
 }
