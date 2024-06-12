@@ -1,4 +1,4 @@
-package nipejs
+package main
 
 import (
 	b64 "encoding/base64"

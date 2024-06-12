@@ -1,4 +1,4 @@
-package nipejs
+package main
 
 import (
 	"fmt"
