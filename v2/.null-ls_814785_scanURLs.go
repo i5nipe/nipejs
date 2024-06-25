@@ -2,33 +2,25 @@ package main
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
-	"time"
 
-	. "github.com/logrusorgru/aurora/v4"
-	log "github.com/projectdiscovery/gologger"
 	"github.com/valyala/fasthttp"
 )
 
 func GetBody(curl chan string, results chan Results, c *fasthttp.Client) {
-	regexfile, _ := os.ReadFile(*regexf)
+	regexfile, _ := ioutil.ReadFile(*regexf)
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseRequest(req)
 	defer fasthttp.ReleaseResponse(resp)
 
-	req_timeout := time.Duration(*timeout) * time.Second
-
+	wg.Done()
 	for url := range curl {
 
 		req.SetRequestURI(url)
 
-		err := c.DoTimeout(req, resp, req_timeout)
-		if err != nil {
-			log.Error().Msgf("%s : %s", Cyan(url), Red(err))
-			wg.Done()
-			continue
-		}
+		c.Do(req, resp)
 
 		html := resp.Body()
 

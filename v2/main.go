@@ -32,7 +32,7 @@ var (
 	threads    = flag.Int("c", 50, "Set the concurrency level")
 	urls       = flag.String("u", "", "List of URLs to scan")
 	debug      = flag.Bool("v", false, "Verbose mode")
-	timeout    = flag.Int("timeout", 10, "Timeout in seconds")
+	timeout    = flag.Int("timeout", 30, "Timeout of requests in seconds")
 	version    = flag.Bool("version", false, "Prints version information")
 	jsdir      = flag.String("d", "", "Directory or File to match Regexs")
 	Scan       = flag.Bool("no-scan", false, "Disable all scans for Special Regexs")
@@ -81,12 +81,16 @@ func main() {
 	}
 
 	// Configs
+	req_timeout := time.Duration(*timeout) * time.Second
 	c := &fasthttp.Client{
 		Name: *usera,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
-		MaxConnWaitTimeout: time.Duration(*timeout) * time.Second,
+		MaxConnWaitTimeout: req_timeout,
+		ReadTimeout:        req_timeout,
+		WriteTimeout:       req_timeout,
+		MaxConnDuration:    req_timeout,
 	}
 	urlsFile, _ := os.Open(*urls)
 
@@ -224,6 +228,7 @@ func matchRegex(target string, rlocation string, results chan Results, regexsfil
 		nurex := pcre.MustCompile(regex)
 
 		matches := nurex.FindAllStringSubmatch(target, -1)
+		log.Debug().Msgf("%d", len(target))
 		for _, match := range matches {
 			for _, unique_match := range match {
 				wg.Add(1)
