@@ -27,6 +27,28 @@ The binary will be installed in the default Go binary directory. Ensure that thi
 export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
+### Using Docker
+You can also use Docker to run nipejs. This approach ensures that you have a consistent environment without needing to install Go on your host machine.
+
+#### Building the Docker Image
+First, build the Docker image:
+
+```bash
+docker build -t nipejs-image .
+```
+
+#### Running the Docker Container
+Next, run the Docker container. You need to pass a folder containing the files to analyze as a volume:
+
+```bash
+docker run --rm -it -v /path/to/your/folder:/app nipejs-image /bin/bash
+```
+
+Inside the container, navigate to the /app directory and run your analysis using the nipejs command as normal.
+
+> [!NOTE]  
+> Make sure to replace /path/to/your/folder with the actual path to the folder containing the files you want to analyze. This command mounts your local folder into the /app directory inside the container, allowing you to run the nipejs command on your files.
+
 ## ☕ Example Commands
 
 - Scan URLs from STDIN: `cat UrlsList | nipejs`
