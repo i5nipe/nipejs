@@ -27,7 +27,7 @@ The binary will be installed in the default Go binary directory. Ensure that thi
 export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
-### Using Docker
+### ☕ Using Docker
 You can also use Docker to run nipejs. This approach ensures that you have a consistent environment without needing to install Go on your host machine.
 
 #### Building the Docker Image
